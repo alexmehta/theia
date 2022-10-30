@@ -1,0 +1,4 @@
+pyglet
+numpy
+pyrealsense2
+opencv-python
