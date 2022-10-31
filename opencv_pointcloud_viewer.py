@@ -217,9 +217,9 @@ def frustum(out, intrinsics, color=(0x40, 0x40, 0x40)):
     for d in range(1, 6, 2):
         def get_point(x, y):
             p = rs.rs2_deproject_pixel_to_point(intrinsics, [x, y], d)
+            print(p)
             line3d(out, orig, view(p), color)
             return p
-
         top_left = get_point(0, 0)
         top_right = get_point(w, 0)
         bottom_right = get_point(w, h)
@@ -229,6 +229,7 @@ def frustum(out, intrinsics, color=(0x40, 0x40, 0x40)):
         line3d(out, view(top_right), view(bottom_right), color)
         line3d(out, view(bottom_right), view(bottom_left), color)
         line3d(out, view(bottom_left), view(top_left), color)
+
 
 
 def pointcloud(out, verts, texcoords, color, painter=True):
@@ -316,9 +317,8 @@ while True:
     out.fill(0)
 
     # grid(out, (0, 0.5, 1), size=1, n=10)
-    # frustum(out, depth_intrinsics)
+    frustum(out, depth_intrinsics)
     # axes(out, view([0, 0, 0]), state.rotation, size=0.1, thickness=1)
-    print(color_source)
     if not state.scale or out.shape[:2] == (h, w):
         pointcloud(out, verts, texcoords, color_source)
     else:
@@ -330,7 +330,6 @@ while True:
 
     # if any(state.mouse_btns):
         # axes(out, view(state.pivot), state.rotation, thickness=4)
-
     dt = time.time() - now
 
     cv2.setWindowTitle(
