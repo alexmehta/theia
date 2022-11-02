@@ -2,3 +2,6 @@ pyglet
 numpy
 pyrealsense2
 opencv-python
+torch 
+torchvision 
+torchaudio
