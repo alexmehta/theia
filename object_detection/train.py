@@ -8,7 +8,7 @@ from PIL import Image
 import torchvision
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
-
+from dataset import PennFudanDataset
 from engine import train_one_epoch, evaluate
 import utils
 import transforms as T
