@@ -8,9 +8,15 @@ import pyrealsense2 as rs
 import itertools
 import collections
 import pygame.midi
+import pygame
 import time
 
 pygame.midi.init()
+pygame.init();
+pygame.font.init()
+
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
+
 output = pygame.midi.Output(0)
 
 def drum(pitch, volume, pan):
@@ -43,19 +49,20 @@ pipeline.start(config)
 audioplayer = pyglet.media.Player()
 audioplayer.position = (0,0,0);
 
+
+mindistance = 0.3;
+maxdistance = 5.3
+magnitude = 40;
+smoothen = 0.65;
+
 def get_soundindex(distance):
 
-    if not (0.3 <= distance <= 5.3): return None;
+    if not (mindistance <= distance <= maxdistance): return None;
 
-    return int( 40 * ( (distance - 0.3) / 5 )**0.65 )
+    return int( magnitude * ( (distance - mindistance) / (maxdistance - mindistance) )**smoothen )
 
 
 
-class Cloudpoint:
-    def __init__(self,tup,sx,sy):
-        self.tup = tup;
-        self.sx = sx;
-        self.sy = sy;
 
 class Model:
 
@@ -65,7 +72,7 @@ class Model:
         self.setpointinterval = 4000;
 
         self.soundtick= 0;
-        self.soundtickinterval = 20;
+        self.soundtickinterval = 5;
         self.soundpoint = None;
         self.lastnote = None;
         self.repeated = False;
@@ -92,15 +99,11 @@ class Model:
             (0.5,0.5,0.5,1)
         ]
 
-        self.batch = pyglet.graphics.Batch()
-        self.soundpointbatch = pyglet.graphics.Batch()
-
-
         pyglet.gl.glPointSize(3)
 
     def draw(self):
 
-        if(self.ticks % self.setpointinterval == 0):
+        if(self.ticks % self.setpointinterval == 0 or pygame.key.get_pressed()[pygame.K_SPACE]):
 
 
             print("Redraw");
@@ -129,27 +132,20 @@ class Model:
                     inbound = get_soundindex(depth) != None;
 
                     if inbound:
-                        self.downsampledmap.append( x / (resx / self.xskip) )
-                        self.downsampledmap.append( y / (resx / self.xskip) )
+                        self.downsampledmap.append( x )
+                        self.downsampledmap.append( y )
                         self.downsampledmap.append( depth )
 
 
         if( (self.ticks % self.setpointinterval) % self.soundtickinterval == 0 and self.soundtick < len(self.downsampled) ):
 
-            self.soundpointbatch = pyglet.graphics.Batch();
 
             soundindex = get_soundindex(self.downsampled[self.soundtick]);
 
             y = self.soundtick % (resy / self.yskip);
             x = int(self.soundtick / (resy / self.yskip));
 
-
-
-            self.soundpointbatch.add(1, GL_POINTS, None, ('v3f',(
-
-                x / (resx / self.xskip),y / (resx / self.xskip),self.downsampled[self.soundtick]))
-
-            , ('c4f', (self.colors[1]) ))
+            self.soundpoint = (x, y);
 
 
             x = x / ( (resx / self.xskip) - 1)
@@ -162,14 +158,18 @@ class Model:
             dorepeat = int(self.soundtick / (resy / self.yskip)) > int( (self.soundtick-1) / (resy / self.yskip))
             if(dorepeat and self.repeated == False):
                 self.repeated = True;
-                drum(70, 100, x);
+                drum(70, 30, x);
                 self.soundtick -= 1;
             elif(soundindex != None):
-                playnote( (40-soundindex)*2 + 25, int((40-soundindex)*2.5), x)
+
+
+
+                playnote( (40-soundindex)*2 + 25, int((40-soundindex)*2) + 20, x)
                 self.lastnote = soundindex;
                 self.repeated = False;
             elif(soundindex == None):
-                drum(50, 100, x);
+                #drum(50, 100, x);
+                1;
 
 
 
@@ -178,89 +178,68 @@ class Model:
 
 
 
-        self.batch = pyglet.graphics.Batch()
 
-        pointlength = int(len(self.downsampledmap) / 3)
+        s = 16 * 20;
 
-        self.batch.add(pointlength, GL_POINTS, None, ('v3f',self.downsampledmap), ('c4f', (self.colors[0] * pointlength) ))
+        pygame.draw.rect(surface, (0,255,0), pygame.Rect(0,0,s,int((resy/resx) * s)))
+
+
+        for i in range(0, int(len(self.downsampledmap)/3)):
+
+            w = (s / (resx / self.xskip));
+            x = s - self.downsampledmap[i*3] / (resx / self.xskip) * s - w;
+            y = self.downsampledmap[i*3 + 1] / (resx / self.xskip) * s;
+
+
+            color = (self.downsampledmap[i*3 + 2] - mindistance) * 255 / (maxdistance)
+            color = 255 - int(color);
+
+            pygame.draw.rect(surface, (color,0,0), pygame.Rect(x,y,w,w));
+
+        if(self.soundpoint != None):
+
+            x = s - self.soundpoint[0] / (resx / self.xskip) * s - w;
+            y = self.soundpoint[1] / (resx / self.xskip) * s;
+            w = (s / (resx / self.xskip));
+
+            pygame.draw.rect(surface, (255,255,255), pygame.Rect(x,y,w,w));
+
+
 
         self.ticks += 1;
-        pyglet.gl.glPointSize(3)
-        self.batch.draw()
-        pyglet.gl.glPointSize(15)
-        self.soundpointbatch.draw();
 
-class Player:
-    def __init__(self,pos=(0,0,0),rot=(0,0)):
-        self.pos = list(pos)
-        self.rot = list(rot)
+clock = pygame.time.Clock();
 
-    def mouse_motion(self,dx,dy):
-        dx/=8; dy/=8; self.rot[0]+=dy; self.rot[1]-=dx
-        if self.rot[0]>90: self.rot[0] = 90
-        elif self.rot[0]<-90: self.rot[0] = -90
+surface = pygame.display.set_mode((400,300))
 
-    def update(self,dt,keys):
-        s = dt*10
-        rotY = -self.rot[1]/180*math.pi
-        dx,dz = s*math.sin(rotY),s*math.cos(rotY)
-
-        if keys[key.W]: self.pos[0]+=dx; self.pos[2]-=dz
-        if keys[key.S]: self.pos[0]-=dx; self.pos[2]+=dz
-        if keys[key.A]: self.pos[0]-=dz; self.pos[2]-=dx
-        if keys[key.D]: self.pos[0]+=dz; self.pos[2]+=dx
-
-        if keys[key.SPACE]: self.pos[1]+=s
-        if keys[key.LSHIFT]: self.pos[1]-=s
+model = Model();
 
 
-class Window(pyglet.window.Window):
+def render_text(string, fontsize, pos, col):
+    text_surface = my_font.render(string, False, col)
 
-    def push(self,pos,rot): glPushMatrix(); glRotatef(-rot[0],1,0,0); glRotatef(-rot[1],0,1,0); glTranslatef(-pos[0],-pos[1],-pos[2],)
-    def Projection(self): glMatrixMode(GL_PROJECTION); glLoadIdentity()
-    def Model(self): glMatrixMode(GL_MODELVIEW); glLoadIdentity()
-    def set2d(self): self.Projection(); gluOrtho2D(0,self.width,0,self.height); self.Model()
-    def set3d(self): self.Projection(); gluPerspective(70,self.width/self.height,0.05,1000); self.Model()
+    w = text_surface.get_width() * (fontsize / text_surface.get_height());
 
-    def setLock(self,state): self.lock = state; self.set_exclusive_mouse(state)
-    lock = False; mouse_lock = property(lambda self:self.lock,setLock)
+    text_surface = pygame.transform.scale(text_surface, (w, fontsize) );
 
-    def __init__(self,*args,**kwargs):
+    surface.blit(text_surface, pos)
 
-        super().__init__(*args,**kwargs)
-        self.set_minimum_size(300,200)
-        self.keys = key.KeyStateHandler()
-        self.push_handlers(self.keys)
-        pyglet.clock.schedule(self.update)
+while True:
 
-        self.model = Model()
-        self.player = Player((0,0,0),(0,180))
-        self.mouse_lock = True;
+    clock.tick(60)
 
-    def on_mouse_motion(self,x,y,dx,dy):
-        self.player.mouse_motion(dx,dy)
-
-    def on_key_press(self,KEY,MOD):
-        if KEY == key.ESCAPE: self.close()
-        elif KEY == key.E: self.mouse_lock = not self.mouse_lock
-
-    def update(self,dt):
-
-        self.player.update(dt,self.keys)
-
-        self.clear()
-        self.set3d()
-        self.push(self.player.pos,self.player.rot)
-        self.model.draw();
-        glPopMatrix()
-
-        #print(pyglet.clock.get_fps());
+    surface.fill( (0,0,0) );
 
 
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
 
-if __name__ == '__main__':
-    window = Window(width=854,height=480,caption='Minecraft',resizable=True, vsync = True)
-    glClearColor(0,0,0,1)
-    glEnable(GL_DEPTH_TEST)
-    #glEnable(GL_CULL_FACE)
-    pyglet.app.run()
+
+    print(clock.get_fps())
+
+    model.draw();
+
+    render_text("FPS: " + str(int(clock.get_fps())), 20, (20,250), (255,255,255));
+    render_text("press space to go to next frame", 20, (20,270), (255,255,255));
+    pygame.display.update()
