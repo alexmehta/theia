@@ -7,6 +7,26 @@ import numpy as np
 import pyrealsense2 as rs
 import itertools
 import collections
+import pygame.midi
+import time
+
+pygame.midi.init()
+output = pygame.midi.Output(0)
+
+def drum(pitch, volume, pan):
+    output.write_short(192, 117);
+    output.write_short(176, 10, pan);
+    output.write_short(0x90, pitch, volume)
+    output.write_short(192, 0);
+
+def playnote(pitch, volume, pan):
+
+    output.write_short(176, 10, pan);
+    output.write_short(0x90, pitch, volume)
+
+def offnote(pitch, volume):
+    output.write_short(128, pitch, volume);
+
 
 pipeline = rs.pipeline()
 config = rs.config()
@@ -20,6 +40,16 @@ config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 pc = rs.pointcloud()
 pipeline.start(config)
 
+audioplayer = pyglet.media.Player()
+audioplayer.position = (0,0,0);
+
+def get_soundindex(distance):
+
+    if not (0.3 <= distance <= 5.3): return None;
+
+    return int( 40 * ( (distance - 0.3) / 5 )**0.65 )
+
+
 
 class Cloudpoint:
     def __init__(self,tup,sx,sy):
@@ -32,13 +62,25 @@ class Model:
     def __init__(self):
 
         self.ticks = 0;
+        self.setpointinterval = 4000;
+
         self.soundtick= 0;
-        self.setpointinterval = 240;
+        self.soundtickinterval = 20;
+        self.soundpoint = None;
+        self.lastnote = None;
+        self.repeated = False;
+
+        self.thetamax = 45;
+
         self.xskip = 40;
         self.yskip = 40;
 
         self.downsampled = [];
+
+        self.downsampledmap = [];
+
         self.floodfilled = [];
+
         self.colors = [
             (1,1,1,1),
             (1,0,0,1),
@@ -51,6 +93,8 @@ class Model:
         ]
 
         self.batch = pyglet.graphics.Batch()
+        self.soundpointbatch = pyglet.graphics.Batch()
+
 
         pyglet.gl.glPointSize(3)
 
@@ -59,9 +103,13 @@ class Model:
         if(self.ticks % self.setpointinterval == 0):
 
 
+            print("Redraw");
+
             self.soundtick= 0;
 
             self.downsampled = [];
+            self.downsampledmap = [];
+
             frames = pipeline.wait_for_frames()
             depth_frame = frames.get_depth_frame()
             color_frame = frames.get_color_frame()
@@ -69,140 +117,78 @@ class Model:
             color_image = np.asanyarray(color_frame.get_data())
 
             pc.map_to(color_frame)
-            points = pc.calculate(depth_frame)
 
-            pointcoords = np.asanyarray(points.get_vertices())
+            points = np.asanyarray(depth_frame.get_data());
+
+            for x in range(0, int(resx / self.xskip)):
+                for y in range(0, int(resy / self.yskip)):
+                    depth = depth_frame.get_distance(x * self.xskip, y * self.yskip);
+                    self.downsampled.append( depth );
 
 
-            for y in range(0, int(resy/self.yskip) ):
-                for x in range(0, int(resx/self.xskip) ):
+                    inbound = get_soundindex(depth) != None;
 
-                    point = tuple(pointcoords[y * self.yskip * resx + x * self.xskip])
+                    if inbound:
+                        self.downsampledmap.append( x / (resx / self.xskip) )
+                        self.downsampledmap.append( y / (resx / self.xskip) )
+                        self.downsampledmap.append( depth )
 
-                    self.downsampled.append(Cloudpoint(point,x,y));
 
-            self.floodfilled = floodfill(self.downsampled, 0.3);
-            self.floodfilled = updownsort(self.floodfilled);
+        if( (self.ticks % self.setpointinterval) % self.soundtickinterval == 0 and self.soundtick < len(self.downsampled) ):
+
+            self.soundpointbatch = pyglet.graphics.Batch();
+
+            soundindex = get_soundindex(self.downsampled[self.soundtick]);
+
+            y = self.soundtick % (resy / self.yskip);
+            x = int(self.soundtick / (resy / self.yskip));
+
+
+
+            self.soundpointbatch.add(1, GL_POINTS, None, ('v3f',(
+
+                x / (resx / self.xskip),y / (resx / self.xskip),self.downsampled[self.soundtick]))
+
+            , ('c4f', (self.colors[1]) ))
+
+
+            x = x / ( (resx / self.xskip) - 1)
+            x = 128 - int(x * 128);
+
+            if(self.lastnote != None):
+                offnote(self.lastnote, 128);
+
+
+            dorepeat = int(self.soundtick / (resy / self.yskip)) > int( (self.soundtick-1) / (resy / self.yskip))
+            if(dorepeat and self.repeated == False):
+                self.repeated = True;
+                drum(70, 100, x);
+                self.soundtick -= 1;
+            elif(soundindex != None):
+                playnote( (40-soundindex)*2 + 25, int((40-soundindex)*2.5), x)
+                self.lastnote = soundindex;
+                self.repeated = False;
+            elif(soundindex == None):
+                drum(50, 100, x);
+
+
+
+
+            self.soundtick += 1;
+
+
 
         self.batch = pyglet.graphics.Batch()
 
-        i = 0;
+        pointlength = int(len(self.downsampledmap) / 3)
 
-        for pointlist in self.floodfilled:
-
-            tuples = [point.tup for point in pointlist];
-
-            flat = list(itertools.chain.from_iterable(tuples));
-
-            pointlength = int(len(flat)/3)
-
-            self.batch.add(pointlength, GL_POINTS, None, ('v3f',flat), ('c4f', (self.colors[i % len(self.colors)] * pointlength) ))
-
-            i += 1;
-
-
-        soundtickclone = self.soundtick;
-        index = 0;
-
-        while(index < len(self.floodfilled) and soundtickclone > len(self.floodfilled[index])):
-            soundtickclone -= len(self.floodfilled[index]);
-            index += 1;
-
-
-
-        soundpoint = None;
-        soundpointbatch = pyglet.graphics.Batch();
-
-        if(index < len(self.floodfilled)):
-            soundpoint = self.floodfilled[index][soundtickclone-1];
-            soundpointbatch.add(1, GL_POINTS, None, ('v3f', (soundpoint.tup[0], soundpoint.tup[1], soundpoint.tup[2]) ), ('c4f', (1.0,1.0,1.0,1.0)) );
-            print("YO: ",soundpoint.tup,not ( int(soundpoint.tup[0]) == int(soundpoint.tup[1]) == int(soundpoint.tup[2]) == 0));
-
-
-
+        self.batch.add(pointlength, GL_POINTS, None, ('v3f',self.downsampledmap), ('c4f', (self.colors[0] * pointlength) ))
 
         self.ticks += 1;
-        self.soundtick+= 1;
         pyglet.gl.glPointSize(3)
         self.batch.draw()
-        pyglet.gl.glPointSize(10)
-        soundpointbatch.draw();
-
-
-def floodfill(points,distancethres):
-
-    lists = [];
-    currlist = [];
-    chunks = {};
-
-    for point in points:
-        floored = (int(point.tup[0] / distancethres), int(point.tup[1] / distancethres), int(point.tup[2] / distancethres))
-
-        if floored in chunks:
-            chunks[floored].append(point)
-        else:
-            chunks[floored] = [point];
-
-    chunkslist = list(chunks.keys());
-
-    notreached = 0;
-
-    while True:
-
-        while ( notreached < len(chunkslist) ) and ( (chunkslist[notreached] in chunks) == False):
-            notreached += 1;
-
-        if notreached == len(chunkslist):
-            break;
-
-        chain = collections.deque([ chunkslist[notreached] ]);
-
-        currlist += chunks[chain[0]];
-        del chunks[chain[0]];
-
-        closest = [[0,0,1],[0,0,-1],[0,1,0],[0,-1,0],[1,0,0],[-1,0,0],
-                    [0,1,1],[0,1,-1],[0,-1,1],[0,-1,-1],
-                    [1,1,-1], [-1,1,-1], [1,-1,-1], [-1,-1,-1], [1,1,1], [-1,1,1], [1,-1,1], [-1,-1,1],
-                    [0,-1,-1], [0,1,-1], [1,0,-1], [-1,0,-1],[0,-1,1], [0,1,1], [1,0,1], [-1,0,1] ]
-
-        while len(chain) > 0:
-
-            for vec in closest:
-                achunk = (chain[0][0]+vec[0],chain[0][1]+vec[1],chain[0][2]+vec[2]);
-
-                if (achunk in chunks) == False: continue;
-
-                currlist += chunks[achunk];
-
-                chain.append(achunk);
-                del chunks[achunk];
-
-            chain.popleft();
-
-        lists.append(currlist);
-        currlist = [];
-
-    return lists;
-
-def updownsort(points):
-
-    newlist = [list(filter(lambda point: not ( point.tup[0] == point.tup[1] == point.tup[2] == 0), pointlist)) for pointlist in points ];
-    newlist = filter(lambda pointlist: len(pointlist)>0, newlist)
-
-    def avg_z(pointlist):
-        z = 0;
-        for point in pointlist: z += point.tup[2];
-        z /= len(pointlist);
-        return z;
-
-    newlist = sorted(newlist, key=avg_z)
-    newlist = [sorted(pointlist, key=lambda point: (point.sx * 1000 + point.sy) ) for pointlist in newlist];
-    return newlist;
-
-def distance(t1, t2):
-    return math.sqrt( (t2[0] - t1[0])**2 + (t2[1]-t1[1])**2 + (t2[2]-t1[2])**2);
-
-
+        pyglet.gl.glPointSize(15)
+        self.soundpointbatch.draw();
 
 class Player:
     def __init__(self,pos=(0,0,0),rot=(0,0)):
@@ -268,12 +254,8 @@ class Window(pyglet.window.Window):
         self.model.draw();
         glPopMatrix()
 
-        print(pyglet.clock.get_fps());
+        #print(pyglet.clock.get_fps());
 
-
-
-
-    #def on_draw(self):
 
 
 if __name__ == '__main__':
