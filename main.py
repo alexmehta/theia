@@ -158,7 +158,7 @@ class Model:
             dorepeat = int(self.soundtick / (resy / self.yskip)) > int( (self.soundtick-1) / (resy / self.yskip))
             if(dorepeat and self.repeated == False):
                 self.repeated = True;
-                drum(70, 30, x);
+                drum(70, 50, x);
                 self.soundtick -= 1;
             elif(soundindex != None):
 
