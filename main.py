@@ -45,8 +45,14 @@ print(rs.stream.depth);
 
 mindistance = 0.3;
 maxdistance = 5.3
-magnitude = 40;
-smoothen = 0.65;
+magnitude = 30;
+smoothen = 0.8;
+
+startnote = 96;
+deltanote = -2;
+
+startvolume = 100;
+deltavolume = 0;
 
 def get_soundindex(distance):
 
@@ -135,17 +141,23 @@ class Model:
 
             dorepeat = int(self.soundtick / (resy / self.yskip)) > int( (self.soundtick-1) / (resy / self.yskip))
             if(dorepeat and self.repeated == False):
+
                 self.repeated = True;
                 drum(70, 50, x);
                 self.soundtick -= 1;
+
             elif(soundindex != None):
 
+                pitch = startnote + soundindex * deltanote
+                volume = startvolume + soundindex * deltavolume;
 
+                playnote( pitch, volume, x)
 
-                playnote( (40-soundindex)*2 + 25, int((40-soundindex)*2) + 20, x)
                 self.lastnote = soundindex;
                 self.repeated = False;
+
             elif(soundindex == None):
+
                 drum(60, 10, x);
                 self.repeated = False;
 
