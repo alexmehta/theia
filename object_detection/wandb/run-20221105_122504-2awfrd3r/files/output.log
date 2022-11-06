@@ -1,0 +1,16 @@
+
+=> Loading checkpoint
+Traceback (most recent call last):
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 109, in <module>
+    main()
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 73, in main
+    load_checkpoint(
+  File "/home/alex/pygame pointcloud/object_detection/utils.py", line 435, in load_checkpoint
+    checkpoint = torch.load(checkpoint_file, map_location=config.DEVICE)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/serialization.py", line 771, in load
+    with _open_file_like(f, 'rb') as opened_file:
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/serialization.py", line 270, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/serialization.py", line 251, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: 'checkpoint.pth.tar'

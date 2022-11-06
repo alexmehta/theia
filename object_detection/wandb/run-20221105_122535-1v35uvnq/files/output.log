@@ -1,0 +1,48 @@
+  0%|                                                                                                                                                           | 0/518 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 109, in <module>
+    main()
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 84, in main
+    train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors)
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 31, in train_fn
+    for batch_idx, (x, y) in enumerate(loop):
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 628, in __next__
+    data = self._next_data()
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 1333, in _next_data
+    return self._process_data(data)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 1359, in _process_data
+    data.reraise()
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/_utils.py", line 543, in reraise
+    raise exception
+cv2.error: Caught error in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/utils/data/_utils/worker.py", line 302, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 58, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 58, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/alex/pygame pointcloud/object_detection/dataset.py", line 56, in __getitem__
+    augmentations = self.transform(image=image, bboxes=bboxes)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/albumentations/core/composition.py", line 210, in __call__
+    data = t(**data)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/albumentations/core/composition.py", line 326, in __call__
+    data = t(force_apply=True, **data)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/albumentations/core/transforms_interface.py", line 118, in __call__
+    return self.apply_with_params(params, **kwargs)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/albumentations/core/transforms_interface.py", line 131, in apply_with_params
+    res[key] = target_function(arg, **dict(params, **target_dependencies))
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/albumentations/augmentations/geometric/transforms.py", line 649, in apply
+    return F.warp_affine(
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/albumentations/augmentations/utils.py", line 122, in wrapped_function
+    result = func(img, *args, **kwargs)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/albumentations/augmentations/geometric/functional.py", line 560, in warp_affine
+    tmp = warp_fn(image)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/albumentations/augmentations/utils.py", line 208, in __process_fn
+    img = process_fn(img, **kwargs)
+cv2.error: OpenCV(4.6.0) :-1: error: (-5:Bad argument) in function 'warpAffine'
+> Overload resolution failed:
+>  - Argument 'borderMode' is required to be an integer
+>  - Argument 'borderMode' is required to be an integer

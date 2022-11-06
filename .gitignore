@@ -1,3 +1,6 @@
 __pycache__
 object_detection/PennFudanPed
-env
+env/
+object_detection/PASCAL_VOC
+object_detection/__pycache__
+

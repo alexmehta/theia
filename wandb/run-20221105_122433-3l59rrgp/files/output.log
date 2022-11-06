@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 109, in <module>
+    main()
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 68, in main
+    train_loader, test_loader, train_eval_loader = get_loaders(
+  File "/home/alex/pygame pointcloud/object_detection/utils.py", line 449, in get_loaders
+    train_dataset = YOLODataset(
+  File "/home/alex/pygame pointcloud/object_detection/dataset.py", line 34, in __init__
+    self.annotations = pd.read_csv(csv_file)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/pandas/util/_decorators.py", line 211, in wrapper
+    return func(*args, **kwargs)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/pandas/util/_decorators.py", line 331, in wrapper
+    return func(*args, **kwargs)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 950, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 605, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 1442, in __init__
+    self._engine = self._make_engine(f, self.engine)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 1735, in _make_engine
+    self.handles = get_handle(
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/pandas/io/common.py", line 856, in get_handle
+    handle = open(
+FileNotFoundError: [Errno 2] No such file or directory: 'PASCAL_VOC/train.csv'

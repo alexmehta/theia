@@ -1,0 +1,18 @@
+
+  0%|                                                                                                                                                           | 0/518 [00:07<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 109, in <module>
+    main()
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 84, in main
+    train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors)
+  File "/home/alex/pygame pointcloud/object_detection/train.py", line 52, in train_fn
+    wandb.log(loss.item())
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 292, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 255, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 1609, in log
+    self._log(data=data, step=step, commit=commit)
+  File "/home/alex/pygame pointcloud/env/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 1386, in _log
+    raise ValueError("wandb.log must be passed a dictionary")
+ValueError: wandb.log must be passed a dictionary

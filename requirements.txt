@@ -5,3 +5,10 @@ opencv-python
 torch 
 torchvision 
 torchaudio
+git+https://github.com/albumentations-team/albumentations.git
+matplotlib
+tqdm
+pandas
+pygame
+wandb
+PIL

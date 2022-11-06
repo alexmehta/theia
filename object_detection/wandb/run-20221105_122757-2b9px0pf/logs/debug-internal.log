@@ -1,0 +1,162 @@
+2022-11-05 12:27:57,462 INFO    StreamThr :141189 [internal.py:wandb_internal():88] W&B internal server running at pid: 141189, started at: 2022-11-05 12:27:57.462137
+2022-11-05 12:27:57,464 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: status
+2022-11-05 12:27:57,465 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: status
+2022-11-05 12:27:57,467 DEBUG   SenderThread:141189 [sender.py:send():303] send: header
+2022-11-05 12:27:57,467 INFO    WriterThread:141189 [datastore.py:open_for_write():75] open: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/run-2b9px0pf.wandb
+2022-11-05 12:27:57,477 DEBUG   SenderThread:141189 [sender.py:send():303] send: run
+2022-11-05 12:27:57,945 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: check_version
+2022-11-05 12:27:57,952 INFO    SenderThread:141189 [dir_watcher.py:__init__():216] watching files in: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files
+2022-11-05 12:27:57,952 INFO    SenderThread:141189 [sender.py:_start_run_threads():928] run started: 2b9px0pf with start time 1667676477.459271
+2022-11-05 12:27:57,952 DEBUG   SenderThread:141189 [sender.py:send():303] send: summary
+2022-11-05 12:27:57,953 INFO    SenderThread:141189 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-11-05 12:27:57,953 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: check_version
+2022-11-05 12:27:58,117 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: run_start
+2022-11-05 12:27:58,126 DEBUG   HandlerThread:141189 [system_info.py:__init__():31] System info init
+2022-11-05 12:27:58,126 DEBUG   HandlerThread:141189 [system_info.py:__init__():46] System info init done
+2022-11-05 12:27:58,126 INFO    HandlerThread:141189 [system_monitor.py:start():150] Starting system monitor
+2022-11-05 12:27:58,126 INFO    SystemMonitor:141189 [system_monitor.py:_start():116] Starting system asset monitoring threads
+2022-11-05 12:27:58,127 INFO    HandlerThread:141189 [system_monitor.py:probe():168] Collecting system info
+2022-11-05 12:27:58,127 INFO    SystemMonitor:141189 [interfaces.py:start():168] Started cpu
+2022-11-05 12:27:58,127 INFO    SystemMonitor:141189 [interfaces.py:start():168] Started disk
+2022-11-05 12:27:58,128 INFO    SystemMonitor:141189 [interfaces.py:start():168] Started gpu
+2022-11-05 12:27:58,128 INFO    SystemMonitor:141189 [interfaces.py:start():168] Started memory
+2022-11-05 12:27:58,129 INFO    SystemMonitor:141189 [interfaces.py:start():168] Started network
+2022-11-05 12:27:58,183 DEBUG   HandlerThread:141189 [system_info.py:probe():195] Probing system
+2022-11-05 12:27:58,184 DEBUG   HandlerThread:141189 [system_info.py:_probe_git():180] Probing git
+2022-11-05 12:27:58,200 DEBUG   HandlerThread:141189 [system_info.py:_probe_git():188] Probing git done
+2022-11-05 12:27:58,200 DEBUG   HandlerThread:141189 [system_info.py:probe():241] Probing system done
+2022-11-05 12:27:58,200 DEBUG   HandlerThread:141189 [system_monitor.py:probe():177] {'os': 'Linux-5.15.0-52-generic-x86_64-with-glibc2.35', 'python': '3.9.15', 'heartbeatAt': '2022-11-05T19:27:58.183559', 'startedAt': '2022-11-05T19:27:57.455312', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/home/alex/pygame pointcloud/object_detection/train.py', 'codePath': 'object_detection/train.py', 'git': {'remote': 'git@github.com:alexmehta/opencv-pointcloud.git', 'commit': '992a68105bac8233a7ad9f7a219fe2ec9f6a8551'}, 'email': 'alexandermehta@outlook.com', 'root': '/home/alex/pygame pointcloud', 'host': 'alex-AX370-Gaming-K3', 'username': 'alex', 'executable': '/home/alex/pygame pointcloud/env/bin/python3', 'cpu_count': 8, 'cpu_count_logical': 16, 'cpu_freq': {'current': 2479.918125, 'min': 2200.0, 'max': 3700.0}, 'cpu_freq_per_core': [{'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 4269.866, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2135.947, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2137.262, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2136.867, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}, {'current': 3700.0, 'min': 2200.0, 'max': 3700.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3700.0}], 'disk': {'total': 915.3213348388672, 'used': 638.5302238464355}, 'gpu': 'NVIDIA GeForce RTX 3060', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 3060', 'memory_total': 12884901888}], 'memory': {'total': 15.56991195678711}}
+2022-11-05 12:27:58,200 INFO    HandlerThread:141189 [system_monitor.py:probe():178] Finished collecting system info
+2022-11-05 12:27:58,200 INFO    HandlerThread:141189 [system_monitor.py:probe():181] Publishing system info
+2022-11-05 12:27:58,201 DEBUG   HandlerThread:141189 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2022-11-05 12:27:58,201 DEBUG   HandlerThread:141189 [system_info.py:_save_pip():67] Saving pip packages done
+2022-11-05 12:27:58,202 INFO    HandlerThread:141189 [system_monitor.py:probe():183] Finished publishing system info
+2022-11-05 12:27:58,204 DEBUG   SenderThread:141189 [sender.py:send():303] send: files
+2022-11-05 12:27:58,205 INFO    SenderThread:141189 [sender.py:_save_file():1171] saving file wandb-metadata.json with policy now
+2022-11-05 12:27:58,211 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: stop_status
+2022-11-05 12:27:58,212 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: stop_status
+2022-11-05 12:27:58,444 DEBUG   SenderThread:141189 [sender.py:send():303] send: telemetry
+2022-11-05 12:27:58,929 INFO    Thread-16 :141189 [upload_job.py:push():143] Uploaded file /tmp/tmphfdtb3pxwandb/2u2w5ubo-wandb-metadata.json
+2022-11-05 12:27:58,953 INFO    Thread-13 :141189 [dir_watcher.py:_on_file_created():275] file/dir created: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/wandb-summary.json
+2022-11-05 12:27:58,954 INFO    Thread-13 :141189 [dir_watcher.py:_on_file_created():275] file/dir created: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/wandb-metadata.json
+2022-11-05 12:27:58,954 INFO    Thread-13 :141189 [dir_watcher.py:_on_file_created():275] file/dir created: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/requirements.txt
+2022-11-05 12:27:59,965 DEBUG   SenderThread:141189 [sender.py:send():303] send: telemetry
+2022-11-05 12:28:00,953 INFO    Thread-13 :141189 [dir_watcher.py:_on_file_created():275] file/dir created: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/output.log
+2022-11-05 12:28:02,954 INFO    Thread-13 :141189 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/output.log
+2022-11-05 12:28:09,497 DEBUG   SenderThread:141189 [sender.py:send():303] send: exit
+2022-11-05 12:28:09,497 INFO    SenderThread:141189 [sender.py:send_exit():442] handling exit code: 1
+2022-11-05 12:28:09,497 INFO    SenderThread:141189 [sender.py:send_exit():444] handling runtime: 11
+2022-11-05 12:28:09,499 INFO    SenderThread:141189 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-11-05 12:28:09,499 INFO    SenderThread:141189 [sender.py:send_exit():450] send defer
+2022-11-05 12:28:09,499 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:09,499 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 0
+2022-11-05 12:28:09,499 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:09,500 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 0
+2022-11-05 12:28:09,500 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 1
+2022-11-05 12:28:09,500 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:09,500 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 1
+2022-11-05 12:28:09,500 INFO    HandlerThread:141189 [system_monitor.py:finish():160] Stopping system monitor
+2022-11-05 12:28:09,500 DEBUG   SystemMonitor:141189 [system_monitor.py:_start():130] Starting system metrics aggregation loop
+2022-11-05 12:28:09,501 DEBUG   SystemMonitor:141189 [system_monitor.py:_start():137] Finished system metrics aggregation loop
+2022-11-05 12:28:09,501 INFO    HandlerThread:141189 [interfaces.py:finish():173] Joined cpu
+2022-11-05 12:28:09,501 DEBUG   SystemMonitor:141189 [system_monitor.py:_start():141] Publishing last batch of metrics
+2022-11-05 12:28:09,501 INFO    HandlerThread:141189 [interfaces.py:finish():173] Joined disk
+2022-11-05 12:28:09,553 INFO    HandlerThread:141189 [interfaces.py:finish():173] Joined gpu
+2022-11-05 12:28:09,554 INFO    HandlerThread:141189 [interfaces.py:finish():173] Joined memory
+2022-11-05 12:28:09,554 INFO    HandlerThread:141189 [interfaces.py:finish():173] Joined network
+2022-11-05 12:28:09,554 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:09,554 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 1
+2022-11-05 12:28:09,554 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 2
+2022-11-05 12:28:09,554 DEBUG   SenderThread:141189 [sender.py:send():303] send: stats
+2022-11-05 12:28:09,555 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:09,555 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 2
+2022-11-05 12:28:09,555 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:09,555 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 2
+2022-11-05 12:28:09,555 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 3
+2022-11-05 12:28:09,555 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:09,555 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 3
+2022-11-05 12:28:09,555 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:09,555 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 3
+2022-11-05 12:28:09,555 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 4
+2022-11-05 12:28:09,556 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:09,556 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 4
+2022-11-05 12:28:09,556 DEBUG   SenderThread:141189 [sender.py:send():303] send: summary
+2022-11-05 12:28:09,556 INFO    SenderThread:141189 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-11-05 12:28:09,556 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:09,556 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 4
+2022-11-05 12:28:09,556 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 5
+2022-11-05 12:28:09,557 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:09,557 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 5
+2022-11-05 12:28:09,557 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:09,557 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 5
+2022-11-05 12:28:09,797 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 6
+2022-11-05 12:28:09,797 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:09,798 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 6
+2022-11-05 12:28:09,798 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:09,798 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 6
+2022-11-05 12:28:09,956 INFO    Thread-13 :141189 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/config.yaml
+2022-11-05 12:28:09,956 INFO    Thread-13 :141189 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/wandb-summary.json
+2022-11-05 12:28:10,497 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: poll_exit
+2022-11-05 12:28:11,985 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 7
+2022-11-05 12:28:11,985 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: poll_exit
+2022-11-05 12:28:11,985 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:11,985 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 7
+2022-11-05 12:28:11,986 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:11,986 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 7
+2022-11-05 12:28:11,986 INFO    SenderThread:141189 [dir_watcher.py:finish():362] shutting down directory watcher
+2022-11-05 12:28:12,956 INFO    Thread-13 :141189 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/output.log
+2022-11-05 12:28:12,957 INFO    SenderThread:141189 [dir_watcher.py:finish():392] scan: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files
+2022-11-05 12:28:12,957 INFO    SenderThread:141189 [dir_watcher.py:finish():406] scan save: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/requirements.txt requirements.txt
+2022-11-05 12:28:12,957 INFO    SenderThread:141189 [dir_watcher.py:finish():406] scan save: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/wandb-metadata.json wandb-metadata.json
+2022-11-05 12:28:12,957 INFO    SenderThread:141189 [dir_watcher.py:finish():406] scan save: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/config.yaml config.yaml
+2022-11-05 12:28:12,957 INFO    SenderThread:141189 [dir_watcher.py:finish():406] scan save: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/output.log output.log
+2022-11-05 12:28:12,957 INFO    SenderThread:141189 [dir_watcher.py:finish():406] scan save: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/wandb-summary.json wandb-summary.json
+2022-11-05 12:28:12,961 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 8
+2022-11-05 12:28:12,964 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:12,965 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 8
+2022-11-05 12:28:12,973 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:12,973 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 8
+2022-11-05 12:28:12,973 INFO    SenderThread:141189 [file_pusher.py:finish():168] shutting down file pusher
+2022-11-05 12:28:14,010 INFO    Thread-19 :141189 [upload_job.py:push():143] Uploaded file /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/output.log
+2022-11-05 12:28:14,077 INFO    Thread-17 :141189 [upload_job.py:push():143] Uploaded file /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/requirements.txt
+2022-11-05 12:28:14,146 INFO    Thread-20 :141189 [upload_job.py:push():143] Uploaded file /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/wandb-summary.json
+2022-11-05 12:28:14,147 INFO    Thread-18 :141189 [upload_job.py:push():143] Uploaded file /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/files/config.yaml
+2022-11-05 12:28:14,348 INFO    Thread-12 :141189 [sender.py:transition_state():463] send defer: 9
+2022-11-05 12:28:14,349 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:14,349 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 9
+2022-11-05 12:28:14,349 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:14,349 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 9
+2022-11-05 12:28:14,349 INFO    SenderThread:141189 [file_pusher.py:join():173] waiting for file pusher
+2022-11-05 12:28:14,349 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 10
+2022-11-05 12:28:14,349 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:14,349 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 10
+2022-11-05 12:28:14,350 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:14,350 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 10
+2022-11-05 12:28:14,443 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 11
+2022-11-05 12:28:14,443 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:14,443 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 11
+2022-11-05 12:28:14,444 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:14,444 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 11
+2022-11-05 12:28:14,444 INFO    SenderThread:141189 [sender.py:transition_state():463] send defer: 12
+2022-11-05 12:28:14,444 DEBUG   SenderThread:141189 [sender.py:send():303] send: final
+2022-11-05 12:28:14,444 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: defer
+2022-11-05 12:28:14,444 DEBUG   SenderThread:141189 [sender.py:send():303] send: footer
+2022-11-05 12:28:14,445 INFO    HandlerThread:141189 [handler.py:handle_request_defer():162] handle defer: 12
+2022-11-05 12:28:14,445 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: defer
+2022-11-05 12:28:14,445 INFO    SenderThread:141189 [sender.py:send_request_defer():459] handle sender defer: 12
+2022-11-05 12:28:14,445 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: poll_exit
+2022-11-05 12:28:14,446 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: poll_exit
+2022-11-05 12:28:14,446 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: server_info
+2022-11-05 12:28:14,446 DEBUG   SenderThread:141189 [sender.py:send_request():317] send_request: server_info
+2022-11-05 12:28:14,449 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: get_summary
+2022-11-05 12:28:14,450 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: sampled_history
+2022-11-05 12:28:14,852 INFO    MainThread:141189 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-11-05 12:28:14,853 INFO    MainThread:141189 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-11-05 12:28:14,853 INFO    MainThread:141189 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-11-05 12:28:14,853 DEBUG   HandlerThread:141189 [handler.py:handle_request():139] handle_request: shutdown
+2022-11-05 12:28:14,853 INFO    HandlerThread:141189 [handler.py:finish():814] shutting down handler
+2022-11-05 12:28:15,444 INFO    WriterThread:141189 [datastore.py:close():279] close: /home/alex/pygame pointcloud/object_detection/wandb/run-20221105_122757-2b9px0pf/run-2b9px0pf.wandb
+2022-11-05 12:28:15,852 INFO    SenderThread:141189 [sender.py:finish():1331] shutting down sender
+2022-11-05 12:28:15,852 INFO    SenderThread:141189 [file_pusher.py:finish():168] shutting down file pusher
+2022-11-05 12:28:15,852 INFO    SenderThread:141189 [file_pusher.py:join():173] waiting for file pusher
+2022-11-05 12:28:15,856 INFO    MainThread:141189 [internal.py:handle_exit():78] Internal process exited
