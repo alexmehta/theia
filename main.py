@@ -1,12 +1,6 @@
-from pyglet.gl import *
-from pyglet.window import key
 import math
-import ctypes
-import pyglet.gl as gl
 import numpy as np
 import pyrealsense2 as rs
-import itertools
-import collections
 import pygame.midi
 import pygame
 import time
@@ -16,7 +10,6 @@ pygame.init();
 pygame.font.init()
 
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
-
 output = pygame.midi.Output(0)
 
 def drum(pitch, volume, pan):
@@ -41,14 +34,14 @@ resx = 640;
 resy = 480;
 
 
+
+
 config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
-config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+#config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 pc = rs.pointcloud()
 pipeline.start(config)
 
-audioplayer = pyglet.media.Player()
-audioplayer.position = (0,0,0);
-
+print(rs.stream.depth);
 
 mindistance = 0.3;
 maxdistance = 5.3
@@ -86,21 +79,6 @@ class Model:
 
         self.downsampledmap = [];
 
-        self.floodfilled = [];
-
-        self.colors = [
-            (1,1,1,1),
-            (1,0,0,1),
-            (0,0,1,1),
-            (0,1,0,1),
-            (1,1,0,1),
-            (0,1,1,1),
-            (1,0,1,1),
-            (0.5,0.5,0.5,1)
-        ]
-
-        pyglet.gl.glPointSize(3)
-
     def draw(self):
 
         if(self.ticks % self.setpointinterval == 0 or pygame.key.get_pressed()[pygame.K_SPACE]):
@@ -115,11 +93,11 @@ class Model:
 
             frames = pipeline.wait_for_frames()
             depth_frame = frames.get_depth_frame()
-            color_frame = frames.get_color_frame()
+            #color_frame = frames.get_color_frame()
 
-            color_image = np.asanyarray(color_frame.get_data())
+            #color_image = np.asanyarray(color_frame.get_data())
 
-            pc.map_to(color_frame)
+            #pc.map_to(color_frame)
 
             points = np.asanyarray(depth_frame.get_data());
 
@@ -168,8 +146,8 @@ class Model:
                 self.lastnote = soundindex;
                 self.repeated = False;
             elif(soundindex == None):
-                #drum(50, 100, x);
-                1;
+                drum(60, 10, x);
+                self.repeated = False;
 
 
 
@@ -209,9 +187,7 @@ class Model:
         self.ticks += 1;
 
 clock = pygame.time.Clock();
-
 surface = pygame.display.set_mode((400,300))
-
 model = Model();
 
 
@@ -234,9 +210,6 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
-
-    print(clock.get_fps())
 
     model.draw();
 
