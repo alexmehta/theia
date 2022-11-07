@@ -7,6 +7,6 @@
 "deltanote":-2,
 "startvolume":100,
 "deltavolume":0,
-"soundtickinterval":3,
+"soundtickinterval":5,
 "setpointinterval":2000
 }
