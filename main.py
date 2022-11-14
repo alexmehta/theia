@@ -4,6 +4,7 @@ import pyrealsense2 as rs
 import pygame.midi
 import pygame
 import time
+import json
 
 pygame.midi.init()
 pygame.init();
@@ -45,14 +46,34 @@ print(rs.stream.depth);
 
 mindistance = 0.3;
 maxdistance = 5.3
-magnitude = 40;
-smoothen = 0.65;
+magnitude = 30;
+smoothen = 0.8;
+
+startnote = 96;
+deltanote = -2;
+
+startvolume = 100;
+deltavolume = 0;
+
+soundsettings = None;
+
+def loadsoundsettings():
+    global soundsettings;
+    soundsettings = json.load(open("soundsettings.json"));
+
+loadsoundsettings();
+
+
+
+
+print(soundsettings);
+
 
 def get_soundindex(distance):
 
-    if not (mindistance <= distance <= maxdistance): return None;
+    if not (soundsettings["mindistance"] <= distance <= soundsettings["maxdistance"]): return None;
 
-    return int( magnitude * ( (distance - mindistance) / (maxdistance - mindistance) )**smoothen )
+    return int( soundsettings["magnitude"] * ( (distance - soundsettings["mindistance"]) / (soundsettings["maxdistance"] - soundsettings["mindistance"]) )**soundsettings["smoothen"] )
 
 
 
@@ -62,10 +83,8 @@ class Model:
     def __init__(self):
 
         self.ticks = 0;
-        self.setpointinterval = 4000;
 
         self.soundtick= 0;
-        self.soundtickinterval = 5;
         self.soundpoint = None;
         self.lastnote = None;
         self.repeated = False;
@@ -81,12 +100,15 @@ class Model:
 
     def draw(self):
 
-        if(self.ticks % self.setpointinterval == 0 or pygame.key.get_pressed()[pygame.K_SPACE]):
+        if(self.ticks % soundsettings["setpointinterval"] == 0 or pygame.key.get_pressed()[pygame.K_SPACE]):
 
 
             print("Redraw");
 
+            loadsoundsettings();
+
             self.soundtick= 0;
+            self.ticks = 0;
 
             self.downsampled = [];
             self.downsampledmap = [];
@@ -115,7 +137,7 @@ class Model:
                         self.downsampledmap.append( depth )
 
 
-        if( (self.ticks % self.setpointinterval) % self.soundtickinterval == 0 and self.soundtick < len(self.downsampled) ):
+        if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0 and self.soundtick < len(self.downsampled) ):
 
 
             soundindex = get_soundindex(self.downsampled[self.soundtick]);
@@ -130,23 +152,29 @@ class Model:
             x = 128 - int(x * 128);
 
             if(self.lastnote != None):
-                offnote(self.lastnote, 128);
+                offnote(self.lastnote, 0);
 
 
             dorepeat = int(self.soundtick / (resy / self.yskip)) > int( (self.soundtick-1) / (resy / self.yskip))
             if(dorepeat and self.repeated == False):
+
                 self.repeated = True;
-                drum(70, 50, x);
+                drum(70, 70, x);
                 self.soundtick -= 1;
+
             elif(soundindex != None):
 
+                pitch = soundsettings["startnote"] + soundindex * soundsettings["deltanote"]
+                volume = soundsettings["startvolume"] + soundindex * soundsettings["deltavolume"];
 
+                playnote( pitch, volume, x)
 
-                playnote( (40-soundindex)*2 + 25, int((40-soundindex)*2) + 20, x)
-                self.lastnote = soundindex;
+                self.lastnote = pitch;
                 self.repeated = False;
+
             elif(soundindex == None):
-                drum(60, 10, x);
+
+                drum(60, 20, x);
                 self.repeated = False;
 
 
@@ -187,7 +215,7 @@ class Model:
         self.ticks += 1;
 
 clock = pygame.time.Clock();
-surface = pygame.display.set_mode((400,300))
+surface = pygame.display.set_mode((700,700))
 model = Model();
 
 
@@ -215,4 +243,19 @@ while True:
 
     render_text("FPS: " + str(int(clock.get_fps())), 20, (20,250), (255,255,255));
     render_text("press space to go to next frame", 20, (20,270), (255,255,255));
+
+    objectkeys = list(soundsettings.keys());
+
+    yk = 0;
+    yp = 30;
+    xk = 330;
+
+    for key in objectkeys:
+        render_text(key + ":" + str(soundsettings[key]), 30, (xk,yk), (255,255,255));
+        yk += yp;
+
+
+    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), 30, (xk,yk), (255,255,255));
+
+
     pygame.display.update()
