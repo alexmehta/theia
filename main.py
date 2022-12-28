@@ -7,7 +7,7 @@ import time
 import json
 
 pygame.midi.init()
-pygame.init();
+pygame.init()
 pygame.font.init()
 
 my_font = pygame.font.SysFont('Comic Sans MS', 30)

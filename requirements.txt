@@ -11,6 +11,6 @@ tqdm
 pandas
 pygame
 wandb
-PIL
+pillow
 pyopencl
 llvmlite
