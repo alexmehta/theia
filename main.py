@@ -1,9 +1,6 @@
-import math
-import numpy as np
 import pyrealsense2 as rs
 import pygame.midi
 import pygame
-import time
 import json
 import sys
 
@@ -101,12 +98,14 @@ class Model:
             frames = pipeline.wait_for_frames()
             self.depth_frame = frames.get_depth_frame()
             self.color_frame = frames.get_color_frame()
-            (self.downsampled, self.downsampledmap) = self.generate_downsampled.generate(self.depth_frame, soundsettings["checkrange"], soundsettings["checkskip"])
-            (self.objectdownsampled, self.objectdownsampledmap) = self.generate_object_downsampled.generate(get_boundingboxes(self.yolo_reader,self.color_frame))
+            self.downsampled, self.downsampledmap = self.generate_downsampled.generate(self.depth_frame, soundsettings["checkrange"], soundsettings["checkskip"])
+            self.objectdownsampled, self.objectdownsampledmap = self.generate_object_downsampled.generate(get_boundingboxes(self.yolo_reader,self.color_frame))
             self.note_drawer.convert_image(self.color_frame, 320, 240)
 
 
-        if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0 and self.soundtick < len(self.downsampled) and
+        if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0 
+           and self.soundtick < len(self.downsampled)
+             and
         self.ticks % soundsettings["setpointinterval"] > self.ticklimiter):
 
             soundindex = get_soundindex(self.downsampled[self.soundtick], soundsettings)
@@ -217,7 +216,8 @@ def checkquit():
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE: return True
+            if event.key == pygame.K_ESCAPE:
+                return True
         elif event.type == pygame.QUIT:
             return True
 
