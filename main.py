@@ -5,6 +5,7 @@ import pygame.midi
 import pygame
 import time
 import json
+import sys;
 
 from drawnotes import NoteDrawer;
 from noteplayer import NotePlayer
@@ -18,7 +19,7 @@ pygame.midi.init()
 pygame.font.init()
 pygame.mixer.init();
 
-my_font = pygame.font.SysFont('Comic Sans MS', 30)
+my_font = pygame.font.SysFont('Arial', 30)
 
 pipeline = rs.pipeline()
 config = rs.config()
@@ -28,7 +29,7 @@ resy = 480;
 
 
 config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
-config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+config.enable_stream(rs.stream.color, 640, 480, rs.format.rgb8, 30)
 pc = rs.pointcloud()
 pipeline.start(config)
 
@@ -66,12 +67,15 @@ class Model:
         self.sx = int(resx / self.xskip);
         self.sy = int(resy / self.yskip);
 
-        self.generate_downsampled = GenerateDownsampled(5, self.xskip, self.yskip, resx, resy, soundsettings)
+        self.generate_downsampled = GenerateDownsampled(self.xskip, self.yskip, resx, resy, soundsettings)
         self.generate_object_downsampled = GenerateObjectDownsampled(self.xskip, self.yskip, resx, resy)
-        self.note_drawer = NoteDrawer(pygame, surface, 0, 0, 320, 240, self.sx, self.sy)
+        self.note_drawer = NoteDrawer(pygame, surface, 320, 240, self.sx, self.sy)
         self.note_player = NotePlayer(pygame);
 
+
     def draw(self):
+
+        checkquit()
 
         if(self.ticks % soundsettings["setpointinterval"] == 0 or pygame.key.get_pressed()[pygame.K_SPACE]):
 
@@ -79,8 +83,12 @@ class Model:
 
             self.ticklimiter = 0;
             self.soundtick= 0;
+            if(not soundsettings["notegrid"]): self.soundtick = 99999;
             self.voicetick = 0;
+            if(not soundsettings["speakgrid"]): self.voicetick = 99999;
             self.ticks = 0;
+            self.soundpoint = (0, 0);
+            self.endsoundtick = 0;
 
             self.downsampled = [];
             self.downsampledmap = [];
@@ -89,13 +97,16 @@ class Model:
             self.objectdownsampledmap = [];
 
             frames = pipeline.wait_for_frames()
-            depth_frame = frames.get_depth_frame()
-            color_frame = frames.get_color_frame()
+            self.depth_frame = frames.get_depth_frame()
+            self.color_frame = frames.get_color_frame()
 
-            (self.downsampled, self.downsampledmap) = self.generate_downsampled.generate(depth_frame);
-            (self.objectdownsampled, self.objectdownsampledmap) = self.generate_object_downsampled.generate(get_boundingboxes(color_frame));
+            (self.downsampled, self.downsampledmap) = self.generate_downsampled.generate(self.depth_frame, soundsettings["checkrange"], soundsettings["checkskip"]);
+            (self.objectdownsampled, self.objectdownsampledmap) = self.generate_object_downsampled.generate(get_boundingboxes(self.color_frame));
+            self.note_drawer.convert_image(self.color_frame, 320, 240);
 
-        if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0 and self.soundtick < len(self.downsampled) ):
+
+        if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0 and self.soundtick < len(self.downsampled) and
+        self.ticks % soundsettings["setpointinterval"] > self.ticklimiter):
 
             soundindex = get_soundindex(self.downsampled[self.soundtick], soundsettings);
 
@@ -106,7 +117,6 @@ class Model:
 
             pan = x / ( self.sx - 1)
             pan = int(pan * 128);
-            print(pan);
 
             if(self.lastnote != None):
                 self.note_player.offnote(self.lastnote, 0);
@@ -115,8 +125,9 @@ class Model:
             if(dorepeat and self.repeated == False):
 
                 self.repeated = True;
-                self.note_player.drum(70, 70, pan);
+                self.note_player.drum(70, 80, pan);
                 self.soundtick -= 1;
+                self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["notecolumndelay"];
 
             elif(soundindex != None):
 
@@ -130,7 +141,7 @@ class Model:
 
             elif(soundindex == None):
 
-                self.note_player.drum(60, 20, pan);
+                self.note_player.drum(60, 50, pan);
                 self.repeated = False;
 
             self.soundtick += 1;
@@ -138,11 +149,13 @@ class Model:
             if(self.soundtick == len(self.downsampled)):
                 self.endsoundtick = self.ticks % soundsettings["setpointinterval"]
 
-        if(self.soundtick == len(self.downsampled) and
+        if(self.soundtick >= len(self.downsampled) and
            (self.ticks % soundsettings["setpointinterval"]) % soundsettings["speakingtickinterval"] == 0 and
            self.voicetick < len(self.objectdownsampled) and
            self.ticks % soundsettings["setpointinterval"] > self.endsoundtick + soundsettings["speakingaftergriddelay"] and
            self.ticks % soundsettings["setpointinterval"] > self.ticklimiter):
+
+            self.soundtick  = 99999;
 
             y = self.voicetick % self.sy;
             x = int(self.voicetick / self.sy);
@@ -156,8 +169,9 @@ class Model:
             if(dorepeat and self.repeated == False):
 
                 self.repeated = True;
-                self.note_player.drum(70, 70, pan);
+                self.note_player.drum(70, 80, pan);
                 self.voicetick -= 1;
+                self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingcolumndelay"];
 
             elif(self.objectdownsampled[self.voicetick] != 0):
 
@@ -172,17 +186,20 @@ class Model:
 
             self.voicetick += 1;
 
-        if(self.soundtick < len(self.downsampled)):
-            self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255);
+        if(self.soundtick <= len(self.downsampled)):
+            self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 20, 20);
         else:
-            self.note_drawer.draw_objects(self.objectdownsampledmap);
+            self.note_drawer.draw_objects(self.objectdownsampledmap, 20, 20);
 
-        self.note_drawer.draw_soundpoint(self.soundpoint);
+        self.note_drawer.draw_image(360, 20)
+
+
+        self.note_drawer.draw_soundpoint(self.soundpoint, 20, 20);
 
         self.ticks += 1;
 
 clock = pygame.time.Clock();
-surface = pygame.display.set_mode((700,700))
+surface = pygame.display.set_mode((700,450))
 model = Model();
 
 
@@ -195,34 +212,34 @@ def render_text(string, fontsize, pos, col):
 
     surface.blit(text_surface, pos)
 
+def checkquit():
+
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE: return True;
+        elif event.type == pygame.QUIT:
+            return True;
+
+
 while True:
 
     clock.tick(60)
 
     surface.fill( (0,0,0) );
 
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+    if(checkquit()): break;
 
     model.draw();
 
-    render_text("FPS: " + str(int(clock.get_fps())), 20, (20,250), (255,255,255));
-    render_text("press space to go to next frame", 20, (20,270), (255,255,255));
+    render_text("FPS: " + str(int(clock.get_fps())), 20, (20,270), (255,255,255));
+    render_text("press space to go to next frame", 20, (20,290), (255,255,255));
 
     objectkeys = list(soundsettings.keys());
 
-    yk = 0;
-    yp = 30;
-    xk = 330;
 
-    for key in objectkeys:
-        render_text(key + ":" + str(soundsettings[key]), 30, (xk,yk), (255,255,255));
-        yk += yp;
-
-
-    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), 30, (xk,yk), (255,255,255));
+    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), 30, (20,315), (255,255,255));
 
 
     pygame.display.update()
+
+sys.exit(1);
