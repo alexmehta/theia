@@ -60,7 +60,7 @@ class GenerateDownsampled():
                         depth = self.chunkings[xr][yr];
 
                 if inbound:
-                    self.downsampledmap.append( int(self.resx / self.xskip) - 1 - x )
+                    self.downsampledmap.append( x )
                     self.downsampledmap.append( y )
                     self.downsampledmap.append( depth )
                     self.downsampled.append( depth );

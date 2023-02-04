@@ -51,7 +51,7 @@ class NoteDrawer():
 
     def convert_image(self, color_frame, width, height):
         color_image = np.asanyarray(color_frame.get_data())
-        color_image = np.flip(color_image.transpose(1,0,2), 0);
+        color_image = color_image.transpose(1,0,2);
         newsurface = self.pygame.surfarray.make_surface(color_image);
         newsurface = self.pygame.transform.scale(newsurface, (width, height));
         self.imagesurface = newsurface;
