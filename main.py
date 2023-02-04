@@ -11,6 +11,7 @@ from noteplayer import NotePlayer
 from downsampled import GenerateDownsampled
 from objectdownsampled import GenerateObjectDownsampled
 from get_soundindex import get_soundindex;
+from get_boundingboxes import get_boundingboxes;
 
 pygame.init();
 pygame.midi.init()
@@ -27,7 +28,7 @@ resy = 480;
 
 
 config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
-#config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 pc = rs.pointcloud()
 pipeline.start(config)
 
@@ -44,8 +45,6 @@ def loadsoundsettings():
             soundfiles[classname] = pygame.mixer.Sound("./sounds/"+classname+".mp3");
 loadsoundsettings();
 
-def get_boundingboxes():
-    return [[90,120,90,120, "dog"],[200,190,200,190, "person"],[300,50,300,50, "chair"]] #x1,y1,x2,y2
 
 
 class Model:
@@ -91,9 +90,10 @@ class Model:
 
             frames = pipeline.wait_for_frames()
             depth_frame = frames.get_depth_frame()
+            color_frame = frames.get_color_frame()
 
             (self.downsampled, self.downsampledmap) = self.generate_downsampled.generate(depth_frame);
-            (self.objectdownsampled, self.objectdownsampledmap) = self.generate_object_downsampled.generate(get_boundingboxes());
+            (self.objectdownsampled, self.objectdownsampledmap) = self.generate_object_downsampled.generate(get_boundingboxes(color_frame));
 
         if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0 and self.soundtick < len(self.downsampled) ):
 
