@@ -1,4 +1,4 @@
-# Theia Project
+# [Theia Project](https://theiaproject.org/)
 
 Theia is an assistance program for the visually impaired that gives audio cues to help give the blind a better sense of understanding. 
 
