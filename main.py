@@ -166,14 +166,14 @@ class Model:
             pan = int(pan * 128)
 
             dorepeat = int(self.voicetick / self.sy) > int( (self.voicetick-1) / self.sy)
-            if(dorepeat and self.repeated == False):
+            if dorepeat and self.repeated == False:
 
                 self.repeated = True
                 self.note_player.drum(70, 80, pan)
                 self.voicetick -= 1
                 self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingcolumndelay"]
 
-            elif(self.objectdownsampled[self.voicetick] != 0):
+            elif self.objectdownsampled[self.voicetick] != 0:
 
                 sound = soundfiles[self.objectdownsampled[self.voicetick]]
                 sound.play()
@@ -186,7 +186,7 @@ class Model:
 
             self.voicetick += 1
 
-        if(self.soundtick <= len(self.downsampled)):
+        if self.soundtick <= len(self.downsampled):
             self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 20, 20)
         else:
             self.note_drawer.draw_objects(self.objectdownsampledmap, 20, 20)
@@ -223,24 +223,14 @@ def checkquit():
 
 
 while True:
-
     clock.tick(60)
-
-    surface.fill( (0,0,0) )
-
-    if(checkquit()): break
-
+    surface.fill((0,0,0))
+    if(checkquit()):
+        break
     model.draw()
-
     render_text("FPS: " + str(int(clock.get_fps())), 20, (20,270), (255,255,255))
     render_text("press space to go to next frame", 20, (20,290), (255,255,255))
-
     objectkeys = list(soundsettings.keys())
-
-
     render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), 30, (20,315), (255,255,255))
-
-
     pygame.display.update()
-
 sys.exit(1)
