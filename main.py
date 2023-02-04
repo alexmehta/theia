@@ -19,7 +19,7 @@ pygame.midi.init()
 pygame.font.init()
 pygame.mixer.init();
 
-my_font = pygame.font.SysFont('Comic Sans MS', 30)
+my_font = pygame.font.SysFont('Arial', 30)
 
 pipeline = rs.pipeline()
 config = rs.config()
