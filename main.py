@@ -189,7 +189,7 @@ class Model:
         self.note_drawer.draw_image(360, 20)
 
 
-        self.note_drawer.draw_soundpoint(self.soundpoint, 0, 0);
+        self.note_drawer.draw_soundpoint(self.soundpoint, 20, 20);
 
         self.ticks += 1;
 
