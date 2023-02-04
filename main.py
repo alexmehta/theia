@@ -182,11 +182,11 @@ class Model:
             self.voicetick += 1;
 
         if(self.soundtick < len(self.downsampled)):
-            self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 0, 0);
+            self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 20, 20);
         else:
             self.note_drawer.draw_objects(self.objectdownsampledmap, 0, 0);
 
-        self.note_drawer.draw_image(340, 0)
+        self.note_drawer.draw_image(360, 20)
 
 
         self.note_drawer.draw_soundpoint(self.soundpoint, 0, 0);
@@ -194,7 +194,7 @@ class Model:
         self.ticks += 1;
 
 clock = pygame.time.Clock();
-surface = pygame.display.set_mode((700,700))
+surface = pygame.display.set_mode((700,450))
 model = Model();
 
 
@@ -226,13 +226,13 @@ while True:
 
     model.draw();
 
-    render_text("FPS: " + str(int(clock.get_fps())), 20, (20,250), (255,255,255));
-    render_text("press space to go to next frame", 20, (20,270), (255,255,255));
+    render_text("FPS: " + str(int(clock.get_fps())), 20, (20,270), (255,255,255));
+    render_text("press space to go to next frame", 20, (20,290), (255,255,255));
 
     objectkeys = list(soundsettings.keys());
 
 
-    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), 30, (20,300), (255,255,255));
+    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), 30, (20,315), (255,255,255));
 
 
     pygame.display.update()
