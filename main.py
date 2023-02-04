@@ -81,13 +81,14 @@ class Model:
 
             loadsoundsettings();
 
-            self.ticklimiter = -1;
+            self.ticklimiter = 0;
             self.soundtick= 0;
             if(not soundsettings["notegrid"]): self.soundtick = 99999;
             self.voicetick = 0;
             if(not soundsettings["speakgrid"]): self.voicetick = 99999;
             self.ticks = 0;
             self.soundpoint = (0, 0);
+            self.endsoundtick = 0;
 
             self.downsampled = [];
             self.downsampledmap = [];
@@ -153,6 +154,8 @@ class Model:
            self.voicetick < len(self.objectdownsampled) and
            self.ticks % soundsettings["setpointinterval"] > self.endsoundtick + soundsettings["speakingaftergriddelay"] and
            self.ticks % soundsettings["setpointinterval"] > self.ticklimiter):
+
+            self.soundtick  = 99999;
 
             y = self.voicetick % self.sy;
             x = int(self.voicetick / self.sy);
