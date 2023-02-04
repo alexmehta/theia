@@ -1,12 +1,12 @@
-import pyttsx3;
-import json;
+import pyttsx3
+import json
 
-settingsfile = open('soundsettings.json');
-settings = json.load(settingsfile);
+settingsfile = open('soundsettings.json')
+settings = json.load(settingsfile)
 
-classes = settings['classes'];
+classes = settings['classes']
 
-engine = pyttsx3.init();
+engine = pyttsx3.init()
 engine.setProperty("rate", settings['speakingrate'])
 
 
