@@ -14,3 +14,4 @@ wandb
 pillow
 pyopencl
 llvmlite
+yolov5

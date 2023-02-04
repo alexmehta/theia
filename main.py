@@ -13,6 +13,7 @@ from downsampled import GenerateDownsampled
 from objectdownsampled import GenerateObjectDownsampled
 from get_soundindex import get_soundindex;
 from get_boundingboxes import get_boundingboxes;
+from yolo import Yolo
 
 pygame.init();
 pygame.midi.init()
@@ -54,6 +55,7 @@ class Model:
 
         self.ticks = 0;
 
+        self.yolo_reader = Yolo()
         self.endsoundtick = 0;
         self.soundtick= 0;
         self.soundpoint = None;
@@ -99,9 +101,8 @@ class Model:
             frames = pipeline.wait_for_frames()
             self.depth_frame = frames.get_depth_frame()
             self.color_frame = frames.get_color_frame()
-
             (self.downsampled, self.downsampledmap) = self.generate_downsampled.generate(self.depth_frame, soundsettings["checkrange"], soundsettings["checkskip"]);
-            (self.objectdownsampled, self.objectdownsampledmap) = self.generate_object_downsampled.generate(get_boundingboxes(self.color_frame));
+            (self.objectdownsampled, self.objectdownsampledmap) = self.generate_object_downsampled.generate(get_boundingboxes(self.yolo_reader,self.color_frame));
             self.note_drawer.convert_image(self.color_frame, 320, 240);
 
 

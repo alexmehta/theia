@@ -7,3 +7,4 @@ object_detection/wandb/
 object_detection/wandb
 tinygrad/
 tinygrad
+yolov5n.pt
