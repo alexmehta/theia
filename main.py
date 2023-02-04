@@ -81,9 +81,11 @@ class Model:
 
             loadsoundsettings();
 
-            self.ticklimiter = 0;
+            self.ticklimiter = -1;
             self.soundtick= 0;
+            if(not soundsettings["notegrid"]): self.soundtick = 99999;
             self.voicetick = 0;
+            if(not soundsettings["speakgrid"]): self.voicetick = 99999;
             self.ticks = 0;
             self.soundpoint = (0, 0);
 
@@ -146,7 +148,7 @@ class Model:
             if(self.soundtick == len(self.downsampled)):
                 self.endsoundtick = self.ticks % soundsettings["setpointinterval"]
 
-        if(self.soundtick == len(self.downsampled) and
+        if(self.soundtick >= len(self.downsampled) and
            (self.ticks % soundsettings["setpointinterval"]) % soundsettings["speakingtickinterval"] == 0 and
            self.voicetick < len(self.objectdownsampled) and
            self.ticks % soundsettings["setpointinterval"] > self.endsoundtick + soundsettings["speakingaftergriddelay"] and
@@ -181,7 +183,7 @@ class Model:
 
             self.voicetick += 1;
 
-        if(self.soundtick < len(self.downsampled)):
+        if(self.soundtick <= len(self.downsampled)):
             self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 20, 20);
         else:
             self.note_drawer.draw_objects(self.objectdownsampledmap, 20, 20);
