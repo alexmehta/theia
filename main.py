@@ -184,7 +184,7 @@ class Model:
         if(self.soundtick < len(self.downsampled)):
             self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 20, 20);
         else:
-            self.note_drawer.draw_objects(self.objectdownsampledmap, 0, 0);
+            self.note_drawer.draw_objects(self.objectdownsampledmap, 20, 20);
 
         self.note_drawer.draw_image(360, 20)
 
