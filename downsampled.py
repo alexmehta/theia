@@ -45,7 +45,7 @@ class GenerateDownsampled():
                 y = (yr + 1) * checkrange - 1;
 
 
-        for x in range(int(self.resx / self.xskip)-1, -1, -1):
+        for x in range(0, int(self.resx / self.xskip)):
             for y in range(0, int(self.resy / self.yskip)):
                 depth = depth_frame.get_distance(x * self.xskip, y * self.yskip);
 
