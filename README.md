@@ -1,6 +1,6 @@
 # [Theia Project](https://theiaproject.org/)
 
-Theia is an assistance program for the visually impaired that gives audio cues to help give the blind a better sense of understanding. 
+Theia is an assistance program for the visually impaired that uses a series of sounds to communicate an environment.
 
 
 ## Installation
@@ -11,7 +11,7 @@ Clone this repository and install required packages.
 pip install -r requirements.txt
 ```
 
-This is run on a raspberry pi and connected to intel realsense. Refer to those forums/repos for assistance. 
+This can be ran on a raspberry pi and uses an intel realsense camera. Refer to those forums/repos for assistance. 
 
 ## Contributing
 
