@@ -1,0 +1,95 @@
+{
+	
+	"xoffset": 220,
+	"yoffset": 40,
+	"xscale": 25,
+	"yscale": 25,
+	"textxoffset": -195,
+	"settingsbuttonxoffset": 20,
+	"settingsbuttonyoffset": -15,
+	"settingswidth": 400,
+	"settingsbuttonsize": 40,
+	"notegrid":{
+		"pos": [0,0],
+		"sizing": [1,1],
+		"background": [0, 0, 400, 65, 40, 40, 40]
+	},
+	"checkrange": {
+
+		"pos": [0,2],
+		"sizing": [4,0.5,1,1],
+		"bounds": [1, 100],
+		"background": [0, 65, 400, 50, 50, 50, 50]
+
+	},
+	"checkskip": {
+
+		"pos": [0,4],
+		"sizing": [4,0.5,1,1],
+		"bounds": [1, 10],
+		"background": [0, 115, 400, 50, 40, 40, 40]
+
+	},
+	"notecolumndelay": {
+
+		"pos": [0,6],
+		"sizing": [4,0.5,1,1],
+		"bounds": [0, 30],
+		"background": [0, 165, 400, 50, 50, 50, 50]
+
+	},
+	"soundtickinterval": {
+
+		"pos": [0,8],
+		"sizing": [4,0.5,1,1],
+		"bounds": [1, 10],
+		"background": [0, 215, 400, 50, 40, 40, 40]
+
+	},
+	"speakgrid":{
+		"pos": [0,10],
+		"sizing": [1,1],
+		"background": [0, 265, 400, 50, 50, 50, 50]
+	},
+	"speakingdelay": {
+
+		"pos": [0,12],
+		"sizing": [4,0.5,1,1],
+		"bounds": [1, 32],
+		"background": [0, 315, 400, 50, 40, 40, 40]
+
+	},
+	"speakingcolumndelay": {
+
+		"pos": [0,14],
+		"sizing": [4,0.5,1,1],
+		"bounds": [1, 32],
+		"background": [0, 365, 400, 50, 50, 50, 50]
+		
+	},
+	"speakingtickinterval": {
+
+		"pos": [0,16],
+		"sizing": [4,0.5,1,1],
+		"bounds": [1, 32],
+		"background": [0, 415, 400, 50, 40, 40, 40]
+
+	},
+	"speakingaftergriddelay": {
+
+		"pos": [0,18],
+		"sizing": [4,0.5,1,1],
+		"bounds": [1, 120],
+		"background": [0, 465, 400, 50, 50, 50, 50]
+
+	},
+	"setpointinterval": {
+
+		"pos": [0,20],
+		"sizing": [4,0.5,1,1],
+		"bounds": [100, 5000],
+		"background": [0, 515, 400, 100, 40, 40, 40]
+
+	}
+
+}

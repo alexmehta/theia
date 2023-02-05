@@ -4,14 +4,14 @@ import pygame
 import json
 import sys
 
-from drawnotes import NoteDrawer
-from noteplayer import NotePlayer
-from downsampled import GenerateDownsampled
-from objectdownsampled import GenerateObjectDownsampled
-from get_soundindex import get_soundindex
-from get_boundingboxes import get_boundingboxes
-from settingsgui import SettingsGUI
-from yolo import Yolo
+from scripts.drawnotes import NoteDrawer
+from scripts.noteplayer import NotePlayer
+from scripts.downsampled import GenerateDownsampled
+from scripts.objectdownsampled import GenerateObjectDownsampled
+from scripts.get_soundindex import get_soundindex
+from scripts.get_boundingboxes import get_boundingboxes
+from scripts.settingsgui import SettingsGUI
+from scripts.yolo import Yolo
 
 pygame.init()
 pygame.midi.init()
@@ -36,11 +36,11 @@ pipeline.start(config)
 soundsettings = None
 soundfiles = {}
 
-guisettings = json.load(open("guisettings.json"))
+guisettings = json.load(open("./settings/guisettings.json"))
 
 def loadsoundsettings():
     global soundsettings
-    soundsettings = json.load(open("soundsettings.json"))
+    soundsettings = json.load(open("./settings/soundsettings.json"))
 
     if soundsettings["speakgrid"]:
         for classname in soundsettings["classes"]:
@@ -211,7 +211,8 @@ class Model:
             dorepeat = int(self.voicetick / self.sy) > int( (self.voicetick-1) / self.sy)
 
             if dorepeat and self.voicetick > 0:
-                self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingcolumndelay"]
+                if self.ticklimiter < self.ticks % soundsettings["setpointinterval"]:
+                    self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingcolumndelay"]
 
 
 
