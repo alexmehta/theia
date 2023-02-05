@@ -17,6 +17,10 @@ class SettingsGUI():
         self.closed = True;
         self.my_font = my_font;
 
+        self.settingsicon = self.pygame.image.load("./images/settings.png");
+        self.closeicon = self.pygame.image.load("./images/close.png");
+
+
         keys = self.config.keys();
 
         for key in keys:
@@ -44,7 +48,8 @@ class SettingsGUI():
                     "name": key,
                     "value": variable,
                     "pos": self.config[key]["pos"],
-                    "sizing": self.config[key]["sizing"]
+                    "sizing": self.config[key]["sizing"],
+                    "background": self.config[key]["background"]
                 }
 
             elif(isinstance(variable, (int,float))):
@@ -69,7 +74,8 @@ class SettingsGUI():
                     "sizing": self.config[key]["sizing"],
                     "bounds": self.config[key]["bounds"],
                     "dragging": False,
-                    "roundint": isinstance(variable, int)
+                    "roundint": isinstance(variable, int),
+                    "background": self.config[key]["background"]
                 }
 
     def run(self):
@@ -84,43 +90,12 @@ class SettingsGUI():
 
         mousepos = self.pygame.mouse.get_pos();
 
-        originalclosed = self.closed;
+        if not self.closed:
+            for key in keys:
+                if "background" in self.gui[key]:
+                    self.pygame.draw.rect(self.surface, (self.gui[key]["background"][4],self.gui[key]["background"][5],self.gui[key]["background"][6] ),
+                    self.pygame.Rect(self.gui[key]["background"][0], self.gui[key]["background"][1], self.gui[key]["background"][2], self.gui[key]["background"][3]))
 
-        if self.closed:
-
-            self.pygame.draw.rect(self.surface, (40,40,40), self.pygame.Rect(0, 0, self.config["settingsbuttonsize"] + 2*self.config["settingsbuttonxoffset"], 1000))
-
-            posx = self.config["settingsbuttonxoffset"]
-            posy = self.config["yoffset"] + self.config["settingsbuttonyoffset"]
-
-            self.pygame.draw.rect(self.surface, (255,0,0), self.pygame.Rect(posx, posy, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]) );
-
-            hovering = (posx + self.config["settingsbuttonsize"] >= mousepos[0] and mousepos[0] >= posx) and (posy + self.config["settingsbuttonsize"] >= mousepos[1] and mousepos[1] >= posy)
-
-
-            if hovering:
-                self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(posx, posy, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]), 4 );
-
-                if self.clicked:
-                    self.closed = False;
-        else:
-
-            self.pygame.draw.rect(self.surface, (40,40,40), self.pygame.Rect(0, 0, self.config["settingswidth"], 1000))
-
-            posx = self.config["settingswidth"] - self.config["settingsbuttonsize"] - self.config["settingsbuttonxoffset"];
-            posy = self.config["yoffset"] + self.config["settingsbuttonyoffset"]
-
-            self.pygame.draw.rect(self.surface, (255,0,0), self.pygame.Rect(posx, posy, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]) );
-
-            hovering = (posx + self.config["settingsbuttonsize"] >= mousepos[0] and mousepos[0] >= posx) and (posy + self.config["settingsbuttonsize"] >= mousepos[1] and mousepos[1] >= posy)
-
-            if hovering:
-                self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(posx, posy, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]), 4 );
-
-                if self.clicked:
-                    self.closed = True;
-
-        if not originalclosed:
             for key in keys:
 
                 me = self.gui[key];
@@ -189,6 +164,49 @@ class SettingsGUI():
                         self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(indicatorx, indicatory, me["sizing"][2], me["sizing"][3]), 4)
 
                     self.render_text(str(me["value"]), 20, (indicatorx + me["sizing"][2]/2, indicatory + me["sizing"][3] + 9), (255,255,255), self.my_font)
+
+        if self.closed:
+
+            #self.pygame.draw.rect(self.surface, (40,40,40), self.pygame.Rect(0, 0, self.config["settingsbuttonsize"] + 2*self.config["settingsbuttonxoffset"], 1000))
+
+            posx = self.config["settingsbuttonxoffset"]
+            posy = self.config["yoffset"] + self.config["settingsbuttonyoffset"]
+
+            self.pygame.draw.rect(self.surface, (50,50,50), self.pygame.Rect(posx, posy, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]) );
+
+            settings_surface = self.pygame.transform.scale(self.settingsicon, (self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]));
+            self.surface.blit(settings_surface, (posx,posy))
+
+
+            hovering = (posx + self.config["settingsbuttonsize"] >= mousepos[0] and mousepos[0] >= posx) and (posy + self.config["settingsbuttonsize"] >= mousepos[1] and mousepos[1] >= posy)
+
+
+            if hovering:
+                self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(posx, posy, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]), 4 );
+
+                if self.clicked:
+                    self.closed = False;
+        else:
+
+            self.pygame.draw.rect(self.surface, (40,40,40), self.pygame.Rect(0, -100, self.config["settingswidth"], 1000), 8)
+
+            posx = self.config["settingswidth"] - self.config["settingsbuttonsize"] - self.config["settingsbuttonxoffset"];
+            posy = self.config["yoffset"] + self.config["settingsbuttonyoffset"]
+
+            self.pygame.draw.rect(self.surface, (255,0,0), self.pygame.Rect(posx, posy, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]) );
+
+            close_surface = self.pygame.transform.scale(self.closeicon, (self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]));
+            self.surface.blit(close_surface, (posx,posy))
+
+
+            hovering = (posx + self.config["settingsbuttonsize"] >= mousepos[0] and mousepos[0] >= posx) and (posy + self.config["settingsbuttonsize"] >= mousepos[1] and mousepos[1] >= posy)
+
+            if hovering:
+                self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(posx, posy, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]), 4 );
+
+                if self.clicked:
+                    self.closed = True;
+
 
     def apply_settings(self):
 

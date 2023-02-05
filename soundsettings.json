@@ -6,13 +6,13 @@
   "startnote": 96,
   "deltanote": -2,
   "notegrid": true,
-  "notecolumndelay": 5,
+  "notecolumndelay": 10,
   "startvolume": 100,
   "deltavolume": 0,
   "soundtickinterval": 4,
   "setpointinterval": 1619,
-  "checkrange": 50,
-  "checkskip": 2,
+  "checkrange": 59,
+  "checkskip": 5,
   "speakgrid": true,
   "classes": [
     "person",
@@ -97,7 +97,7 @@
     "toothbrush"
   ],
   "speakingrate": 400,
-  "speakingdelay": 3,
+  "speakingdelay": 6,
   "speakingcolumndelay": 5,
   "speakingtickinterval": 3,
   "speakingaftergriddelay": 20
