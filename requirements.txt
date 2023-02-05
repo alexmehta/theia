@@ -1,12 +1,10 @@
 pyglet
 numpy
 pyrealsense2
-opencv-python
 torch 
 torchvision 
-torchaudio
-tqdm
 pygame
 pillow
 pyopencl
 yolov5
+pyttsx3
