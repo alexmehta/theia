@@ -97,7 +97,7 @@
     "toothbrush"
   ],
   "speakingrate": 400,
-  "speakingdelay": 6,
+  "speakingdelay": 10,
   "speakingcolumndelay": 5,
   "speakingtickinterval": 3,
   "speakingaftergriddelay": 20
