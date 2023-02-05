@@ -1,10 +1,4 @@
-pyglet
 numpy
 pyrealsense2
-torch 
-torchvision 
 pygame
-pillow
-pyopencl
 yolov5
-pyttsx3
