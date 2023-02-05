@@ -185,8 +185,9 @@ class Model:
 
                     if self.objectdownsampled[i] != 0:
                         self.skipcol = False;
-                if self.skipcol:
-                    self.note_player.drum(80, 70, pan)
+                self.note_player.drum(80, 100, pan)
+                self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingcolumndelay"]
+
 
 
             if self.objectdownsampled[self.voicetick] != 0:
@@ -206,19 +207,13 @@ class Model:
                         self.skipcol = False;
 
             elif not self.skipcol:
-                self.note_player.drum(60, 70, pan)
+                self.note_player.drum(60, 50, pan)
 
             if not self.skipcol:
                 if not paused: self.voicetick += 1
 
             if self.skipcol:
                 self.voicetick = ( int(self.voicetick / self.sy) + 1 ) * self.sy
-
-            dorepeat = int(self.voicetick / self.sy) > int( (self.voicetick-1) / self.sy)
-
-            if dorepeat and self.voicetick > 0:
-                if self.ticklimiter < self.ticks % soundsettings["setpointinterval"]:
-                    self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingcolumndelay"]
 
         if not paused: self.ticks += 1
 
