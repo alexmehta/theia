@@ -71,7 +71,7 @@ class Model:
 
         self.generate_downsampled = GenerateDownsampled(self.xskip, self.yskip, resx, resy, soundsettings)
         self.generate_object_downsampled = GenerateObjectDownsampled(self.xskip, self.yskip, resx, resy)
-        self.note_drawer = NoteDrawer(pygame, surface, 320, 240, self.sx, self.sy, my_font)
+        self.note_drawer = NoteDrawer(pygame, surface, 400, 300, self.sx, self.sy, my_font)
         self.note_player = NotePlayer(pygame)
         self.settings_gui = SettingsGUI(pygame, surface, soundsettings, guisettings, my_font)
 
@@ -111,7 +111,7 @@ class Model:
                 self.boundingboxes = get_boundingboxes(self.yolo_reader,self.color_frame);
                 self.objectdownsampled, self.objectdownsampledmap = self.generate_object_downsampled.generate(self.boundingboxes)
 
-            self.note_drawer.convert_image(self.color_frame, 320, 240)
+            self.note_drawer.convert_image(self.color_frame, 400, 300)
 
 
         if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0
@@ -182,28 +182,32 @@ class Model:
 
                     if self.objectdownsampled[i] != 0:
                         self.skipcol = False;
+                if self.skipcol:
+                    self.note_player.drum(80, 70, pan)
+
 
             if self.objectdownsampled[self.voicetick] != 0:
 
                 sound = soundfiles[self.objectdownsampled[self.voicetick]]
                 sound.play()
-                self.repeated = False
+
                 self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingdelay"]
 
                 self.skipcol = True;
 
-                for i in range(self.voicetick, int( (self.voicetick+1) / self.sy) * self.sy - 1):
-                    if self.voicetick >= len(self.objectdownsampled):
+                for i in range(self.voicetick + 1, (int( (self.voicetick) / self.sy) + 1) * self.sy):
+                    if i >= len(self.objectdownsampled):
                         break
 
                     if self.objectdownsampled[i] != 0:
                         self.skipcol = False;
+                        print("make it false");
 
-            else:
-                self.note_player.drum(60, 50, pan)
-                self.repeated = False
+            elif not self.skipcol:
+                self.note_player.drum(60, 70, pan)
 
-            self.voicetick += 1
+            if not self.skipcol:
+                self.voicetick += 1
 
             if self.skipcol:
                 self.voicetick = ( int(self.voicetick / self.sy) + 1 ) * self.sy
@@ -217,23 +221,23 @@ class Model:
 
 
         if self.soundtick <= len(self.downsampled):
-            self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 100, 80)
+            self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 100, 100)
         else:
-            self.note_drawer.draw_objects(self.objectdownsampledmap, 100, 80)
+            self.note_drawer.draw_objects(self.objectdownsampledmap, 100, 100)
 
-        self.note_drawer.draw_image(440, 80)
+        self.note_drawer.draw_image(520, 100)
 
         if(soundsettings["speakgrid"]):
-            self.note_drawer.draw_bounding_boxes(self.boundingboxes, 440, 80, resx, resy);
+            self.note_drawer.draw_bounding_boxes(self.boundingboxes, 520, 100, resx, resy);
 
-        self.note_drawer.draw_soundpoint(self.soundpoint, 100, 80)
+        self.note_drawer.draw_soundpoint(self.soundpoint, 100, 100)
 
         self.settings_gui.run();
 
         self.ticks += 1
 
 clock = pygame.time.Clock()
-surface = pygame.display.set_mode((900,600))
+surface = pygame.display.set_mode((1020,600))
 model = Model()
 
 
@@ -260,15 +264,16 @@ while True:
     clock.tick(60)
     surface.fill((0,0,0))
 
-    posy = 330;
-    fontsize = 20;
+    posy = 384;
+    fontsize = 15;
 
-    render_text("FPS: " + str(int(clock.get_fps())), fontsize, (100,posy), (255,255,255))
-    render_text("press space to go to next frame", fontsize, (100,posy + 1.1*fontsize), (255,255,255))
+
+    render_text("press space to go to next frame", fontsize, (110,posy + 2*1.1*fontsize), (255,255,255))
     objectkeys = list(soundsettings.keys())
-    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), fontsize, (100,posy + 2*1.1*fontsize), (255,255,255))
-
+    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), fontsize, (110,posy + 3*1.1*fontsize), (255,255,255))
     model.draw()
+
+    render_text("FPS: " + str(int(clock.get_fps())), fontsize, (110,posy), (255,255,255))
     pygame.display.update()
 
     if(checkquit()):
