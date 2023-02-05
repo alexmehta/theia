@@ -5,13 +5,13 @@ import numpy
 
 class Yolo():
     """
-    This is a yolo object detection class 
+    This is a yolo object detection class
     Attributes:
         model (class): Holds the internal model
         classes (dict): Dict of classes from classes.yml
     """
     def __init__(self,model_path = 'yolov5n.pt'):
-        model = yolov5.load('yolov5n.pt')
+        model = yolov5.load(model_path)
         # set model parameters
         model.conf = 0.25  # NMS confidence threshold
         model.iou = 0.45  # NMS IoU threshold
@@ -37,4 +37,3 @@ class Yolo():
         for idx,box in enumerate(boxes):
             box.append(self.to_cat(categories[idx]))
         return boxes
-

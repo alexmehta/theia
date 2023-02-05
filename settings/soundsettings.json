@@ -5,7 +5,7 @@
   "smoothen": 0.8,
   "startnote": 96,
   "deltanote": -2,
-  "notegrid": false,
+  "notegrid": true,
   "notecolumndelay": 10,
   "startvolume": 100,
   "deltavolume": 0,
