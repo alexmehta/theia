@@ -10,8 +10,7 @@ class Yolo():
         model (class): Holds the internal model
         classes (dict): Dict of classes from classes.yml
     """
-  
-    def __init__(self):
+    def __init__(self,model_path = 'yolov5n.pt'):
         model = yolov5.load('yolov5n.pt')
         # set model parameters
         model.conf = 0.25  # NMS confidence threshold
@@ -38,8 +37,4 @@ class Yolo():
         for idx,box in enumerate(boxes):
             box.append(self.to_cat(categories[idx]))
         return boxes
-if __name__=="__main__":
-    img = 'traffic.jpg'
-    pic  =numpy.asarray(Image.open(img))
-    yolo = Yolo()
-    print(yolo.run(pic))
+
