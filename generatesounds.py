@@ -14,3 +14,4 @@ engine.setProperty("rate", settings['speakingrate'])
 for x in classes:
     engine.save_to_file(x, "./sounds/"+str(x)+".mp3")
     engine.runAndWait()
+    print("generated " + str(x));

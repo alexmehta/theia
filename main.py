@@ -99,11 +99,14 @@ class Model:
             self.depth_frame = frames.get_depth_frame()
             self.color_frame = frames.get_color_frame()
             self.downsampled, self.downsampledmap = self.generate_downsampled.generate(self.depth_frame, soundsettings["checkrange"], soundsettings["checkskip"])
-            self.objectdownsampled, self.objectdownsampledmap = self.generate_object_downsampled.generate(get_boundingboxes(self.yolo_reader,self.color_frame))
+
+            self.boundingboxes = get_boundingboxes(self.yolo_reader,self.color_frame);
+            self.objectdownsampled, self.objectdownsampledmap = self.generate_object_downsampled.generate(self.boundingboxes)
+
             self.note_drawer.convert_image(self.color_frame, 320, 240)
 
 
-        if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0 
+        if( (self.ticks % soundsettings["setpointinterval"]) % soundsettings["soundtickinterval"] == 0
            and self.soundtick < len(self.downsampled)
              and
         self.ticks % soundsettings["setpointinterval"] > self.ticklimiter):
@@ -193,6 +196,7 @@ class Model:
 
         self.note_drawer.draw_image(360, 20)
 
+        self.note_drawer.draw_bounding_boxes(self.boundingboxes, 360, 20, resx, resy, my_font);
 
         self.note_drawer.draw_soundpoint(self.soundpoint, 20, 20)
 
@@ -208,7 +212,7 @@ def render_text(string, fontsize, pos, col):
 
     w = text_surface.get_width() * (fontsize / text_surface.get_height())
 
-    text_surface = pygame.transform.scale(text_surface, (w, fontsize) )
+    text_surface = pygame.transform.scale(text_surface, (int(w), int(fontsize)) )
 
     surface.blit(text_surface, pos)
 

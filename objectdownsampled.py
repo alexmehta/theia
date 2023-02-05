@@ -5,10 +5,11 @@ class GenerateObjectDownsampled():
         self.yskip = yskip
         self.resx = resx
         self.resy = resy
-        self.object_downsampled = []
-        self.object_downsampled_map = []
 
     def generate(self, objects):
+
+        self.object_downsampled = []
+        self.object_downsampled_map = []
 
         for x in range(0, int(self.resx * self.resy / (self.xskip * self.yskip))):
             self.object_downsampled.append(0)
