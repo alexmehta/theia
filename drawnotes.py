@@ -20,7 +20,7 @@ class NoteDrawer():
 
             x = downsampledmap[i*3] * (self.width / self.sx)
             y = downsampledmap[i*3 + 1] * (self.height / self.sy)
-            color = (downsampledmap[i*3 + 2] - min_depth) * (max_map - min_map) / (max_depth - min_depth) + min_depth
+            color = (downsampledmap[i*3 + 2] - min_depth) * (max_map - min_map) / (max_depth - min_depth) + min_map
 
             if(color < 0): color = 0
             if(color > 255): color = 255

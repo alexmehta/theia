@@ -10,6 +10,7 @@ from downsampled import GenerateDownsampled
 from objectdownsampled import GenerateObjectDownsampled
 from get_soundindex import get_soundindex
 from get_boundingboxes import get_boundingboxes
+from settingsgui import SettingsGUI
 from yolo import Yolo
 
 pygame.init()
@@ -34,6 +35,8 @@ pipeline.start(config)
 
 soundsettings = None
 soundfiles = {}
+
+guisettings = json.load(open("guisettings.json"))
 
 def loadsoundsettings():
     global soundsettings
@@ -70,11 +73,14 @@ class Model:
         self.generate_object_downsampled = GenerateObjectDownsampled(self.xskip, self.yskip, resx, resy)
         self.note_drawer = NoteDrawer(pygame, surface, 320, 240, self.sx, self.sy)
         self.note_player = NotePlayer(pygame)
+        self.settings_gui = SettingsGUI(pygame, surface, soundsettings, guisettings, my_font)
 
 
     def draw(self):
 
         checkquit()
+
+        if(self.lastnote != None): self.note_player.offnote(self.lastnote, 0)
 
         if(self.ticks % soundsettings["setpointinterval"] == 0 or pygame.key.get_pressed()[pygame.K_SPACE]):
 
@@ -124,15 +130,7 @@ class Model:
             if(self.lastnote != None):
                 self.note_player.offnote(self.lastnote, 0)
 
-            dorepeat = int(self.soundtick / self.sy) > int( (self.soundtick-1) / self.sy)
-            if(dorepeat and self.repeated == False):
-
-                self.repeated = True
-                self.note_player.drum(70, 80, pan)
-                self.soundtick -= 1
-                self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["notecolumndelay"]
-
-            elif(soundindex != None):
+            if(soundindex != None):
 
                 pitch = soundsettings["startnote"] + soundindex * soundsettings["deltanote"]
                 volume = soundsettings["startvolume"] + soundindex * soundsettings["deltavolume"]
@@ -152,6 +150,11 @@ class Model:
             if(self.soundtick == len(self.downsampled)):
                 self.endsoundtick = self.ticks % soundsettings["setpointinterval"]
 
+            dorepeat = int(self.soundtick / self.sy) > int( (self.soundtick-1) / self.sy)
+
+            if dorepeat and self.soundtick > 0:
+                self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["notecolumndelay"]
+
         if(self.soundtick >= len(self.downsampled) and
            (self.ticks % soundsettings["setpointinterval"]) % soundsettings["speakingtickinterval"] == 0 and
            self.voicetick < len(self.objectdownsampled) and
@@ -163,20 +166,12 @@ class Model:
             y = self.voicetick % self.sy
             x = int(self.voicetick / self.sy)
 
-            self.soundpoint = (x, y)
-
             pan = x / ( self.sx - 1)
             pan = int(pan * 128)
 
-            dorepeat = int(self.voicetick / self.sy) > int( (self.voicetick-1) / self.sy)
-            if dorepeat and self.repeated == False:
+            self.soundpoint = (x, y)
 
-                self.repeated = True
-                self.note_player.drum(70, 80, pan)
-                self.voicetick -= 1
-                self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingcolumndelay"]
-
-            elif self.objectdownsampled[self.voicetick] != 0:
+            if self.objectdownsampled[self.voicetick] != 0:
 
                 sound = soundfiles[self.objectdownsampled[self.voicetick]]
                 sound.play()
@@ -184,26 +179,33 @@ class Model:
                 self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingdelay"]
 
             else:
-                self.note_player.drum(60, 20, pan)
+                self.note_player.drum(60, 50, pan)
                 self.repeated = False
 
             self.voicetick += 1
 
+            dorepeat = int(self.voicetick / self.sy) > int( (self.voicetick-1) / self.sy)
+
+            if dorepeat and self.voicetick > 0:
+                self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingcolumndelay"]
+
         if self.soundtick <= len(self.downsampled):
-            self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 20, 20)
+            self.note_drawer.draw_notes(self.downsampledmap, soundsettings["maxdistance"], soundsettings["mindistance"], 0, 255, 100, 80)
         else:
-            self.note_drawer.draw_objects(self.objectdownsampledmap, 20, 20)
+            self.note_drawer.draw_objects(self.objectdownsampledmap, 100, 80)
 
-        self.note_drawer.draw_image(360, 20)
+        self.note_drawer.draw_image(440, 80)
 
-        self.note_drawer.draw_bounding_boxes(self.boundingboxes, 360, 20, resx, resy, my_font);
+        self.note_drawer.draw_bounding_boxes(self.boundingboxes, 440, 80, resx, resy, my_font);
 
-        self.note_drawer.draw_soundpoint(self.soundpoint, 20, 20)
+        self.note_drawer.draw_soundpoint(self.soundpoint, 100, 80)
+
+        self.settings_gui.run();
 
         self.ticks += 1
 
 clock = pygame.time.Clock()
-surface = pygame.display.set_mode((700,450))
+surface = pygame.display.set_mode((900,600))
 model = Model()
 
 
@@ -229,12 +231,18 @@ def checkquit():
 while True:
     clock.tick(60)
     surface.fill((0,0,0))
+
+    posy = 330;
+    fontsize = 20;
+
+    render_text("FPS: " + str(int(clock.get_fps())), fontsize, (100,posy), (255,255,255))
+    render_text("press space to go to next frame", fontsize, (100,posy + 1.1*fontsize), (255,255,255))
+    objectkeys = list(soundsettings.keys())
+    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), fontsize, (100,posy + 2*1.1*fontsize), (255,255,255))
+
+    model.draw()
+    pygame.display.update()
+
     if(checkquit()):
         break
-    model.draw()
-    render_text("FPS: " + str(int(clock.get_fps())), 20, (20,270), (255,255,255))
-    render_text("press space to go to next frame", 20, (20,290), (255,255,255))
-    objectkeys = list(soundsettings.keys())
-    render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), 30, (20,315), (255,255,255))
-    pygame.display.update()
 sys.exit(1)
