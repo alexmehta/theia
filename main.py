@@ -174,7 +174,7 @@ class Model:
             self.soundpoint = (x, y)
 
 
-            if int(self.voicetick / self.sy) > int( (self.voicetick-1) / self.sy) or self.voicetick == 0:
+            if int(self.voicetick / self.sy) > int( (self.voicetick-1) / self.sy):
                 self.skipcol = True;
                 for i in range(self.voicetick, self.voicetick + self.sy):
                     if self.voicetick >= len(self.objectdownsampled):
