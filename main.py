@@ -219,8 +219,6 @@ class Model:
 
     def draw(self):
 
-        checkquit()
-
         if(self.lastnote != None): self.note_player.offnote(self.lastnote, 0)
 
         if( (self.ticks >= soundsettings["setpointinterval"] or self.ticks == 0) or pygame.key.get_pressed()[pygame.K_SPACE]):
@@ -296,10 +294,12 @@ while True:
 
 
     objectkeys = list(soundsettings.keys())
+
+    if(checkquit()):
+        break
+
     model.draw()
 
     pygame.display.update()
 
-    if(checkquit()):
-        break
 sys.exit(1)
