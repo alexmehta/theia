@@ -15,11 +15,14 @@ from scripts.yolo import Yolo
 from scripts.play_tools import PlayTools;
 
 pygame.init()
+pygame.display.set_caption('Theia')
 pygame.midi.init()
 pygame.font.init()
 pygame.mixer.init()
 
 my_font = pygame.font.SysFont('Arial', 30)
+settings_font = pygame.font.SysFont('Arial', 18)
+
 
 pipeline = rs.pipeline()
 config = rs.config()
@@ -63,7 +66,7 @@ class Model:
         self.ticklimiter = 0
         self.lastnote = None
 
-        self.paused = False;
+        self.paused = True;
 
         self.xskip = 40
         self.yskip = 40
@@ -76,8 +79,9 @@ class Model:
 
         self.note_drawer = NoteDrawer(pygame, surface, 400, 300, self.sx, self.sy, my_font)
         self.note_player = NotePlayer(pygame)
-        self.settings_gui = SettingsGUI(pygame, surface, soundsettings, guisettings, my_font)
+        self.settings_gui = SettingsGUI(pygame, surface, soundsettings, guisettings, settings_font)
         self.play_tools = PlayTools(pygame, surface)
+        self.play_tools.paused = self.paused;
 
 
     def notemode_condition(self):
@@ -259,11 +263,6 @@ class Model:
 
         self.settings_gui.run();
 
-clock = pygame.time.Clock()
-surface = pygame.display.set_mode((1020,600))
-model = Model()
-
-
 
 def render_text(string, fontsize, pos, col):
     text_surface = my_font.render(string, False, col)
@@ -283,6 +282,9 @@ def checkquit():
         elif event.type == pygame.QUIT:
             return True
 
+clock = pygame.time.Clock()
+surface = pygame.display.set_mode((1020,600))
+model = Model()
 
 while True:
     clock.tick(60)

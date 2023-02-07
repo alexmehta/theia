@@ -6,10 +6,10 @@ class SettingsGUI():
 
     def __init__(self, pygame, surface, settings, config, my_font):
 
-
         self.settings = settings;
-        self.config = json.loads(json.dumps(config));
-        self.gui = {}
+        self.settings_list = [];
+
+        self.originalconfig = config;
         self.pygame = pygame;
         self.surface = surface;
         self.mousepressed = False;
@@ -19,7 +19,23 @@ class SettingsGUI():
 
         self.settingsicon = self.pygame.image.load("./images/settings.png");
         self.closeicon = self.pygame.image.load("./images/close.png");
+        self.undoicon = self.pygame.image.load("./images/undo.png");
 
+        self.load_settings();
+
+
+    def undo_settings(self):
+        if len(self.settings_list) > 0:
+
+            self.settings = self.settings_list[len(self.settings_list)-1];
+            self.settings_list.pop();
+            self.load_settings()
+            self.apply_settings(False);
+
+    def load_settings(self):
+
+        self.gui = {}
+        self.config = json.loads(json.dumps(self.originalconfig));
 
         keys = self.config.keys();
 
@@ -27,10 +43,7 @@ class SettingsGUI():
 
             if key in ["xoffset", "yoffset", "xscale", "yscale", "textxoffset", "settingsbuttonxoffset", "settingsbuttonyoffset", "settingsbuttonsize", "settingswidth"]: continue;
 
-
-            variable = settings[key];
-
-
+            variable = self.settings[key];
 
             if(isinstance(variable, bool)):
 
@@ -78,6 +91,8 @@ class SettingsGUI():
                     "background": self.config[key]["background"]
                 }
 
+
+
     def run(self):
 
 
@@ -91,6 +106,8 @@ class SettingsGUI():
         mousepos = self.pygame.mouse.get_pos();
 
         if not self.closed:
+
+
             for key in keys:
                 if "background" in self.gui[key]:
                     self.pygame.draw.rect(self.surface, (self.gui[key]["background"][4],self.gui[key]["background"][5],self.gui[key]["background"][6] ),
@@ -100,7 +117,7 @@ class SettingsGUI():
 
                 me = self.gui[key];
 
-                self.render_text(key, 20, (me["pos"][0] + self.config["textxoffset"], me["pos"][1]), (255,255,255), self.my_font, False)
+                self.render_text(key, (me["pos"][0] + self.config["textxoffset"], me["pos"][1]), (255,255,255), self.my_font, False)
 
                 if me["type"] == "bool":
 
@@ -163,11 +180,9 @@ class SettingsGUI():
                     if hovering:
                         self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(indicatorx, indicatory, me["sizing"][2], me["sizing"][3]), 4)
 
-                    self.render_text(str(me["value"]), 20, (indicatorx + me["sizing"][2]/2, indicatory + me["sizing"][3] + 9), (255,255,255), self.my_font)
+                    self.render_text(str(me["value"]), (indicatorx + me["sizing"][2]/2, indicatory + me["sizing"][3] + 9), (255,255,255), self.my_font)
 
         if self.closed:
-
-            #self.pygame.draw.rect(self.surface, (40,40,40), self.pygame.Rect(0, 0, self.config["settingsbuttonsize"] + 2*self.config["settingsbuttonxoffset"], 1000))
 
             posx = self.config["settingsbuttonxoffset"]
             posy = self.config["yoffset"] + self.config["settingsbuttonyoffset"]
@@ -207,11 +222,30 @@ class SettingsGUI():
                 if self.clicked:
                     self.closed = True;
 
+            pos2x = self.config["settingswidth"] - self.config["settingsbuttonsize"] - self.config["settingsbuttonxoffset"];
+            pos2y = self.config["yoffset"] + self.config["settingsbuttonyoffset"] + self.config["settingsbuttonsize"] + 6
 
-    def apply_settings(self):
+            self.pygame.draw.rect(self.surface, (60,60,60), self.pygame.Rect(pos2x, pos2y, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]) );
+
+            close_surface = self.pygame.transform.scale(self.undoicon, (self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]));
+            self.surface.blit(close_surface, (pos2x,pos2y))
+
+
+            hovering2 = (pos2x + self.config["settingsbuttonsize"] >= mousepos[0] and mousepos[0] >= pos2x) and (pos2y + self.config["settingsbuttonsize"] >= mousepos[1] and mousepos[1] >= pos2y)
+
+            if hovering2:
+                self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(pos2x, pos2y, self.config["settingsbuttonsize"], self.config["settingsbuttonsize"]), 4 );
+
+                if self.clicked:
+                    self.undo_settings();
+
+
+    def apply_settings(self, append=True):
 
 
         keys = self.gui.keys();
+
+        if append: self.settings_list.append(json.loads(json.dumps(self.settings)))
 
         for key in keys:
             self.settings[key] = self.gui[key]["value"];
@@ -225,14 +259,16 @@ class SettingsGUI():
 
 
 
-    def render_text(self, string, fontsize, pos, col, my_font, centered=True):
+
+
+
+    def render_text(self, string, pos, col, my_font, centered=True):
 
 
         text_surface = my_font.render(string, False, col)
 
-        w = text_surface.get_width() * (fontsize / text_surface.get_height())
+        w = text_surface.get_width();
+        h = text_surface.get_height();
 
-        text_surface = self.pygame.transform.scale(text_surface, (int(w), int(fontsize)) )
-
-        if centered: self.surface.blit(text_surface, (pos[0] - int(w/2), pos[1] - fontsize/2))
-        else: self.surface.blit(text_surface, (pos[0], pos[1] - fontsize/2))
+        if centered: self.surface.blit(text_surface, (pos[0] - int(w/2), pos[1] - h/2))
+        else: self.surface.blit(text_surface, (pos[0], pos[1] - h/2))
