@@ -147,8 +147,8 @@ class Model:
 
             if(soundindex != None):
 
-                pitch = soundsettings["startnote"] + soundindex * soundsettings["deltanote"]
-                volume = soundsettings["startvolume"] + soundindex * soundsettings["deltavolume"]
+                pitch = int(soundsettings["startnote"] + soundindex * soundsettings["deltanote"])
+                volume = int(soundsettings["startvolume"] + soundindex * soundsettings["deltavolume"])
 
                 self.note_player.playnote( pitch, volume, pan)
 
