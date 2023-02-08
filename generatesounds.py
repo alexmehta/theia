@@ -1,7 +1,7 @@
 import pyttsx3
 import json
 
-settingsfile = open('soundsettings.json')
+settingsfile = open('./settings/soundsettings.json')
 settings = json.load(settingsfile)
 
 classes = settings['classes']
