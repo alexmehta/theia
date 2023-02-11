@@ -39,6 +39,8 @@ class SettingsGUI():
 
         keys = self.config.keys();
 
+        print(keys);
+
         for key in keys:
 
             if key in ["xoffset", "yoffset", "xscale", "yscale", "textxoffset", "settingsbuttonxoffset", "settingsbuttonyoffset", "settingsbuttonsize", "settingswidth"]: continue;
@@ -203,7 +205,7 @@ class SettingsGUI():
                     self.closed = False;
         else:
 
-            self.pygame.draw.rect(self.surface, (40,40,40), self.pygame.Rect(0, -100, self.config["settingswidth"], 1000), 8)
+            self.pygame.draw.rect(self.surface, (40,40,40), self.pygame.Rect(0, -100, self.config["settingswidth"], 2000), 8)
 
             posx = self.config["settingswidth"] - self.config["settingsbuttonsize"] - self.config["settingsbuttonxoffset"];
             posy = self.config["yoffset"] + self.config["settingsbuttonyoffset"]

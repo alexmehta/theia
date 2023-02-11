@@ -178,6 +178,11 @@ class Model:
             pan = x / ( self.sx - 1)
             pan = int(pan * 128)
 
+            startpitch = soundsettings["speakstartpitch"];
+            endpitch = soundsettings["speakendpitch"];
+
+            pitch = int( (y / self.sy) * (endpitch - startpitch) + startpitch )
+
             self.soundpoint = (x, y)
 
 
@@ -196,6 +201,7 @@ class Model:
 
             if self.objectdownsampled[self.voicetick] != 0:
 
+                self.note_player.drum(pitch, 70, pan)
                 sound = soundfiles[self.objectdownsampled[self.voicetick]]
                 sound.play()
 
@@ -211,7 +217,7 @@ class Model:
                         self.skipcol = False;
 
             elif not self.skipcol:
-                self.note_player.drum(60, 50, pan)
+                self.note_player.drum(pitch, 70, pan)
 
             if not self.skipcol:
                 if not paused: self.voicetick += 1
@@ -283,7 +289,7 @@ def checkquit():
             return True
 
 clock = pygame.time.Clock()
-surface = pygame.display.set_mode((1020,600))
+surface = pygame.display.set_mode((1020,800))
 model = Model()
 
 while True:

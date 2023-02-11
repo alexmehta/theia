@@ -83,12 +83,28 @@
 		"background": [0, 465, 400, 50, 50, 50, 50]
 
 	},
-	"setpointinterval": {
+	"speakstartpitch": {
 
 		"pos": [0,20],
 		"sizing": [4,0.5,1,1],
+		"bounds": [0, 128],
+		"background": [0, 515, 400, 50, 40, 40, 40]
+
+	},
+	"speakendpitch": {
+
+		"pos": [0,22],
+		"sizing": [4,0.5,1,1],
+		"bounds": [0, 128],
+		"background": [0, 565, 400, 50, 50, 50, 50]
+
+	},
+	"setpointinterval": {
+
+		"pos": [0,24],
+		"sizing": [4,0.5,1,1],
 		"bounds": [100, 5000],
-		"background": [0, 515, 400, 100, 40, 40, 40]
+		"background": [0, 615, 400, 500, 40, 40, 40]
 
 	}
 
