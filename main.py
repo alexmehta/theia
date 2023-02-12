@@ -115,9 +115,6 @@ class Model:
         self.objectdownsampled = []
         self.objectdownsampledmap = []
 
-        frames = pipeline.wait_for_frames()
-        self.depth_frame = frames.get_depth_frame()
-        self.color_frame = frames.get_color_frame()
         self.downsampled, self.downsampledmap = self.generate_downsampled.generate(self.depth_frame, soundsettings["checkrange"], soundsettings["checkskip"])
 
         if(soundsettings["speakgrid"]):
@@ -229,6 +226,10 @@ class Model:
 
     def draw(self):
 
+        frames = pipeline.wait_for_frames()
+        self.depth_frame = frames.get_depth_frame()
+        self.color_frame = frames.get_color_frame()
+
         if(self.lastnote != None): self.note_player.offnote(self.lastnote, 0)
 
         if( (self.ticks >= soundsettings["setpointinterval"] or self.ticks == 0) or pygame.key.get_pressed()[pygame.K_SPACE]):
@@ -244,6 +245,7 @@ class Model:
             self.note_drawer.draw_objects(self.objectdownsampledmap, 100, 100)
 
         self.note_drawer.draw_image(520, 100)
+        self.note_drawer.draw_note_image_overlay(self.color_frame, 100, 100, 80);
 
         if(soundsettings["speakgrid"]):
             self.note_drawer.draw_bounding_boxes(self.boundingboxes, 520, 100, resx, resy);
@@ -293,7 +295,7 @@ surface = pygame.display.set_mode((1020,800))
 model = Model()
 
 while True:
-    clock.tick(60)
+    clock.tick(30)
     surface.fill((0,0,0))
 
     posy = 369;

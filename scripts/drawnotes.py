@@ -19,7 +19,7 @@ class NoteDrawer():
         self.pygame.draw.rect(self.surface, (30,30,30,), self.pygame.Rect(offsetx,offsety-20, self.width,20))
         self.render_text("Notes Visualized", 17, (offsetx + 10, offsety-20), (255,255,255), self.my_font, False )
 
-        self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(offsetx,offsety,self.width,self.height))
+        #self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(offsetx,offsety,self.width,self.height))
         for i in range(0, int(len(downsampledmap)/3)):
 
             x = downsampledmap[i*3] * (self.width / self.sx)
@@ -36,7 +36,7 @@ class NoteDrawer():
         self.pygame.draw.rect(self.surface, (30,30,30,), self.pygame.Rect(offsetx,offsety-20, self.width,20))
         self.render_text("Object Sounds Visualized", 17, (offsetx + 10, offsety-20), (255,255,255), self.my_font, False )
 
-        self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(offsetx,offsety,self.width,self.height))
+        #self.pygame.draw.rect(self.surface, (0,0,125), self.pygame.Rect(offsetx,offsety,self.width,self.height))
         for i in range(0, int(len(objectdownsampledmap)/3)):
 
             x = objectdownsampledmap[i*3] * (self.width / self.sx)
@@ -45,6 +45,16 @@ class NoteDrawer():
             color = 255
 
             self.pygame.draw.rect(self.surface, (color,0,0), self.pygame.Rect(offsetx + x,offsety + y,self.width / self.sx,self.height / self.sy))
+
+    def draw_note_image_overlay(self, color_frame, offsetx, offsety, alpha = 50):
+
+        color_image = np.asanyarray(color_frame.get_data())
+        color_image = color_image.transpose(1,0,2)
+        newsurface = self.pygame.surfarray.make_surface(color_image)
+        newsurface = self.pygame.transform.scale(newsurface, (self.width, self.height))
+        newsurface.set_alpha(alpha);
+
+        self.surface.blit(newsurface, (offsetx, offsety));
 
     def draw_image(self, x, y):
 
