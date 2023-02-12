@@ -10,7 +10,7 @@
   "startvolume": 100,
   "deltavolume": 0,
   "soundtickinterval": 3,
-  "setpointinterval": 3873,
+  "setpointinterval": 5000,
   "checkrange": 59,
   "checkskip": 2,
   "speakgrid": true,
