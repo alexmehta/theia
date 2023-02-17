@@ -48,7 +48,7 @@ def loadsoundsettings():
 
     if soundsettings["speakgrid"]:
         for classname in soundsettings["classes"]:
-            soundfiles[classname] = pygame.mixer.Sound("./sounds/"+classname+".mp3")
+            soundfiles[classname] = pygame.mixer.Sound("./sounds/tts/"+classname+".mp3")
 loadsoundsettings()
 
 
@@ -200,7 +200,7 @@ class Model:
 
                 self.note_player.drum(pitch, 70, pan)
                 sound = soundfiles[self.objectdownsampled[self.voicetick]]
-                sound.play()
+                self.note_player.playfile(sound, 100, pan)
 
                 self.ticklimiter = self.ticks % soundsettings["setpointinterval"] + soundsettings["speakingdelay"]
 
@@ -295,7 +295,7 @@ surface = pygame.display.set_mode((1020,800))
 model = Model()
 
 while True:
-    clock.tick(30)
+    clock.tick(15)
     surface.fill((0,0,0))
 
     posy = 369;
