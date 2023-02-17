@@ -230,8 +230,6 @@ class Model:
         self.depth_frame = frames.get_depth_frame()
         self.color_frame = frames.get_color_frame()
 
-        if(self.lastnote != None): self.note_player.offnote(self.lastnote, 0)
-
         if( (self.ticks >= soundsettings["setpointinterval"] or self.ticks == 0) or pygame.key.get_pressed()[pygame.K_SPACE]):
             self.restart();
             self.ticks+=1;

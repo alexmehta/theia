@@ -54,7 +54,11 @@ class NotePlayer():
 
     def offnote(self, pitch, volume):
 
-        self.channel.stop();
+        lastchannel = self.channelchoice - 1;
+        if lastchannel < 0: lastchannel = 7;
+
+        pygame.mixer.Channel(lastchannel).set_volume(0,0);
+        pygame.mixer.Channel(lastchannel).stop();
 
     def playfile(self, file, volume, pan):
 
