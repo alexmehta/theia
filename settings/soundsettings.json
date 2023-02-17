@@ -100,7 +100,7 @@
   "speakingdelay": 32,
   "speakingcolumndelay": 10,
   "speakingtickinterval": 15,
-  "speakingaftergriddelay": 30,
+  "speakingaftergriddelay": 1,
   "speakstartpitch": 60,
   "speakendpitch": 101
 }
