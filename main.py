@@ -1,4 +1,4 @@
-import pyrealsense2 as rs
+import pyrealsense2.pyrealsense2 as rs
 import pygame.midi
 import pygame
 import json
@@ -23,7 +23,6 @@ pygame.mixer.init()
 my_font = pygame.font.SysFont('Arial', 30)
 settings_font = pygame.font.SysFont('Arial', 18)
 
-
 pipeline = rs.pipeline()
 config = rs.config()
 
@@ -33,24 +32,27 @@ resy = 480
 
 config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
 config.enable_stream(rs.stream.color, 640, 480, rs.format.rgb8, 30)
+
 pc = rs.pointcloud()
 pipeline.start(config)
 
-
-soundsettings = None
+soundsettings = json.load(open("./settings/soundsettings.json"))
 soundfiles = {}
 
 guisettings = json.load(open("./settings/guisettings.json"))
+
+for classname in soundsettings["classes"]:
+    print(classname)
+    soundfiles[classname] = pygame.mixer.Sound("./sounds/tts/"+classname+".mp3")
+
 
 def loadsoundsettings():
     global soundsettings
     soundsettings = json.load(open("./settings/soundsettings.json"))
 
-    if soundsettings["speakgrid"]:
-        for classname in soundsettings["classes"]:
-            soundfiles[classname] = pygame.mixer.Sound("./sounds/tts/"+classname+".mp3")
 loadsoundsettings()
 
+note_player = NotePlayer(pygame)
 
 
 class Model:
@@ -59,7 +61,7 @@ class Model:
 
         self.ticks = 0
 
-        self.yolo_reader = Yolo('yolov5m.pt')
+        self.yolo_reader = Yolo()
         self.endsoundtick = 0
         self.soundtick= 0
         self.soundpoint = None
@@ -78,7 +80,6 @@ class Model:
         self.generate_object_downsampled = GenerateObjectDownsampled(self.xskip, self.yskip, resx, resy)
 
         self.note_drawer = NoteDrawer(pygame, surface, 400, 300, self.sx, self.sy, my_font)
-        self.note_player = NotePlayer(pygame)
         self.settings_gui = SettingsGUI(pygame, surface, soundsettings, guisettings, settings_font)
         self.play_tools = PlayTools(pygame, surface)
         self.play_tools.paused = self.paused;
@@ -290,9 +291,12 @@ def checkquit():
 
 clock = pygame.time.Clock()
 surface = pygame.display.set_mode((1020,800))
+
 model = Model()
+model.note_player = note_player
 
 while True:
+
     clock.tick(15)
     surface.fill((0,0,0))
 
