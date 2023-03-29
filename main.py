@@ -13,6 +13,8 @@ from scripts.get_boundingboxes import get_boundingboxes
 from scripts.settingsgui import SettingsGUI
 from scripts.yolo import Yolo
 from scripts.play_tools import PlayTools;
+from scripts.physical_buttons import PhysicalButtons;
+
 
 pygame.init()
 pygame.display.set_caption('Theia')
@@ -83,6 +85,7 @@ class Model:
         self.settings_gui = SettingsGUI(pygame, surface, soundsettings, guisettings, settings_font)
         self.play_tools = PlayTools(pygame, surface)
         self.play_tools.paused = self.paused;
+        self.buttons = PhysicalButtons();
 
 
     def notemode_condition(self):
@@ -253,8 +256,16 @@ class Model:
 
         playstates = self.play_tools.draw(364, 408, 40, 8)
 
-        if playstates[0]:
+        if playstates[0] or ( not (self.notemode_condition() or self.objectmode_condition()) and self.buttons.play.is_pressed ):
             self.restart();
+
+        if self.buttons.increment.is_pressed:
+            soundsettings["speakingtickinterval"]+=1;
+            soundsettings["soundtickinterval"]+=1;
+
+        if self.buttons.decrement.is_pressed:
+            if soundsettings["speakingtickinterval"] > 1: soundsettings["speakingtickinterval"]-=1;
+            if soundsettings["soundtickinterval"] > 1: soundsettings["soundtickinterval"]-=1;
 
         if playstates[1]:
             self.play_tools.paused = not self.play_tools.paused;
@@ -266,7 +277,6 @@ class Model:
 
         render_text("FPS: " + str(int(clock.get_fps())), fontsize, (posx,posy), (255,255,255))
         render_text("Interval: " + str(model.ticks) + "/" + str(soundsettings["setpointinterval"]), fontsize, (posx,posy + fontsize), (255,255,255))
-
 
         self.settings_gui.run();
 
