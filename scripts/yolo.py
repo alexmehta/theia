@@ -11,8 +11,7 @@ class Yolo():
         classes (dict): Dict of classes from classes.yml
     """
     def __init__(self,model_path = 'yolov5n.pt'):
-        model = torch.hub.load(r'
-       /home/pi/.cache/torch/hub/ultralytics_yolov5_master', 'custom', path=r'yolov5s.pt', source='local')        # set model parameters
+        model = torch.hub.load(r'/home/pi/.cache/torch/hub/ultralytics_yolov5_master', 'custom', path=r'yolov5s.pt', source='local')        # set model parameters
         model.conf = 0.25  # NMS confidence threshold
         model.iou = 0.45  # NMS IoU threshold
         model.agnostic = False  # NMS class-agnostic
