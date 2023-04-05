@@ -11,14 +11,14 @@ Clone this repository and install required packages.
 pip install -r requirements.txt
 ```
 
-This can be ran on a raspberry pi and uses an intel realsense camera. Refer to those forums/repos for assistance. 
+This can be ran on a raspberry pi and uses an intel realsense camera. Refer to those forums/repos for assistance on installing if the script fails. 
 
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+Please make sure to update any tests as appropriate.
 
 ## License
 
