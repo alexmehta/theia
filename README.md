@@ -1,6 +1,6 @@
 # [Theia Project](https://theiaproject.org/)
 
-Theia is an assistance program for the visually impaired that uses a series of sounds to communicate an environment.
+Theia is an assistance program for the visually impaired that uses a series of sounds to communicate an environment. Theia won multiple awards at local and state science fairs and has a [preprint](https://arxiv.org/abs/2303.13536) 
 [Video Demo](https://www.youtube.com/watch?v=YrfPQbwcvGg)
 
 ## Installation
@@ -38,3 +38,5 @@ Please make sure to update any tests as appropriate.
 ## License
 
 [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/#)
+
+
