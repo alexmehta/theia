@@ -37,6 +37,5 @@ Please make sure to update any tests as appropriate.
 
 ## License
 
-[GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/#)
-
+GNU Affero General Public License v3.0
 
