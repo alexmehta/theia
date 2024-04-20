@@ -1,0 +1,4 @@
+numpy
+pyrealsense2
+pygame
+yolov5
