@@ -1,0 +1,3 @@
+[submodule "yolov5-arm-custom"]
+	path = yolov5-arm-custom
+	url = git@github.com:alexmehta/yolov5-arm-custom.git

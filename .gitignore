@@ -1,0 +1,9 @@
+__pycache__
+object_detection/PennFudanPed
+env/
+object_detection/PASCAL_VOC
+object_detection/__pycache__
+object_detection/wandb/
+object_detection/wandb
+tinygrad/
+tinygrad
